@@ -40,9 +40,33 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     gameView->hp[PLAYER_DRACULA] = GAME_START_BLOOD_POINTS;
 
     //adjust to current state
+    //here we want to analyse pastPlays string and adjust 
+    //the values as we read information from the string
     if(pastPlays == NULL){
         return gameView;
     }
+    //the following can probably cleaned up
+    int curr = 0;
+    int currPlayerID = 0;
+    int Location = 0;
+    char currPlayer[1];
+    char currLocation[2];
+    char currEncounter[4];
+    int pastPlaySize = strlen(pastPlays);
+    int numTurns = (pastPlaySize/7)/5; //fix maths for this to get how many times the player has taken a trun
+    while (curr < pastPlaySize){
+        currPlayer[0] = pastPlays[curr];
+        currPlayerID = letterToPlayerID(currPlayer);
+        currLocation[0] = pastPlays[curr+1];
+        currLocation[1] = pastPlays[curr+2];
+        currEncounter[0] = pastPlays[curr+3];
+        currEncounter[1] = pastPlays[curr+4];
+        currEncounter[2] = pastPlays[curr+5];
+        currEncounter[3] = pastPlays[curr+6];
+        gameView->trail[currPlayerID][numTurns];
+        //clean this if i havent done so before its due
+    }
+
     return gameView;
 }
      
