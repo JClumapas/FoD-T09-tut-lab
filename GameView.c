@@ -90,6 +90,12 @@ void getHistory(GameView currentView, PlayerID player,
                             LocationID trail[TRAIL_SIZE])
 {
     //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
+    int i = 0;
+    while (i<TRAIL_SIZE){
+        trail[i] = UNKNOWN_LOCATION;
+        i++;
+    }
+    
 }
 
 //// Functions that query the map to find information about connectivity
