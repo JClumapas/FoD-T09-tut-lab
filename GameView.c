@@ -8,6 +8,8 @@
 #include "GameView.h"
 // #include "Map.h" ... if you decide to use the Map ADT
      
+#define NUM_HUNTERS 4
+
 struct gameView {
     int hp[NUM_PLAYERS];
     int trail[NUM_PLAYERS][TRAIL_SIZE];
@@ -45,26 +47,53 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     if(pastPlays == NULL){
         return gameView;
     }
-    //the following can probably cleaned up
+    //the following can probably be cleaned up
+    int count = 3;
     int curr = 0;
     int currPlayerID = 0;
     int Location = 0;
     char currPlayer[1];
     char currLocation[2];
-    char currEncounter[4];
     int pastPlaySize = strlen(pastPlays);
     int numTurns = (pastPlaySize/7)/5; //fix maths for this to get how many times the player has taken a trun
     while (curr < pastPlaySize){
+        //the following gets the current player and adds locations to their respective trail array
+        count = 3;
         currPlayer[0] = pastPlays[curr];
         currPlayerID = letterToPlayerID(currPlayer);
         currLocation[0] = pastPlays[curr+1];
         currLocation[1] = pastPlays[curr+2];
-        currEncounter[0] = pastPlays[curr+3];
-        currEncounter[1] = pastPlays[curr+4];
-        currEncounter[2] = pastPlays[curr+5];
-        currEncounter[3] = pastPlays[curr+6];
         gameView->trail[currPlayerID][numTurns];
         //clean this if i havent done so before its due
+
+        //the following reads the characters after the first 3 to adjust the scores/hp
+        if (currPlayerID != PLAYER_DRACULA){
+            while (count < 7){
+                if (pastPlays[curr+count] == 'T'){
+                    //apply trap consequences
+                }else if (pastPlays[curr+count] == 'V'){
+                    //apply consequences for meeting immature vampire
+                }else if (pastPlays[curr+count] == 'D'){
+                    //apply consequences for encountering dracula
+                }else{
+                    count = 7;
+                    continue;
+                }
+                count++;
+            }
+        }else{
+            if (pastPlays[curr+3] == 'T'){
+                //apply trap by dracula
+            }
+            if (pastPlays[curr+4] == 'V'){
+                //apply immature vampire was placed
+            }
+            if (pastPlays[curr+5] == 'M'){
+                //apply trap has worn out
+            }else if (pastPlays[curr+5] == 'V'){
+                //apply immature vampire has matured
+            }
+        }
     }
 
     return gameView;
