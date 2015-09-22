@@ -9,6 +9,8 @@
 // #include "Map.h" ... if you decide to use the Map ADT
      
 struct gameView {
+    int hp[NUM_PLAYERS];
+    int trail[NUM_PLAYERS][TRAIL_SIZE];
     int score;
     char *pastPlays; // past plays 
 };
@@ -19,7 +21,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
 {
     //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
     GameView gameView = malloc(sizeof(struct gameView));
-    gameview->score = GAME_START_SCORE;
+    //gameView->score = 
     gameView->pastPlays = pastPlays;
     return gameView;
 }
@@ -91,12 +93,10 @@ void getHistory(GameView currentView, PlayerID player,
                             LocationID trail[TRAIL_SIZE])
 {
     int i = 0;
-    while (i<TRAIL_SIZE){
-        trail[i] = UNKNOWN_LOCATION;
+    while (i < TRAIL_SIZE){
+        trail[i] = currentView->trail[player][i];
         i++;
     }
-
-    int ID = abbrevToID(abbrev);
 }
 
 //// Functions that query the map to find information about connectivity
