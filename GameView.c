@@ -6,11 +6,12 @@
 #include "Globals.h"
 #include "Game.h"
 #include "GameView.h"
-// #include "Map.h" ... if you decide to use the Map ADT
+#include "Map.h" //use for get connections
      
 #define NUM_HUNTERS 4
 
 struct gameView {
+    Map europe;
     int hp[NUM_PLAYERS];
     int trail[NUM_PLAYERS][TRAIL_SIZE];
     int score;
@@ -23,6 +24,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
 {
     //initializing gameView variables
     GameView gameView = malloc(sizeof(struct gameView));
+    gameView->europe = newMap();
     gameView->score = GAME_START_SCORE;
     gameView->pastPlays = pastPlays;
     int i = 0;
