@@ -12,7 +12,6 @@ struct hunterView {
     GameView view;
     PlayerMessage *messages;
 };
-     
 
 // Creates a new HunterView to summarise the current state of the game
 HunterView newHunterView(char *pastPlays, PlayerMessage messages[])
