@@ -8,8 +8,7 @@
 // #include "Map.h" ... if you decide to use the Map ADT
      
 struct gameView {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    int hello;
+     char *pastPlays; // past plays 
 };
      
 
@@ -18,7 +17,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
 {
     //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
     GameView gameView = malloc(sizeof(struct gameView));
-    gameView->hello = 42;
+    gameView->pastPlays = pastPlays;
     return gameView;
 }
      
@@ -36,15 +35,16 @@ void disposeGameView(GameView toBeDeleted)
 // Get the current round
 Round getRound(GameView currentView)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    return 0;
+    //printf("%s\n",currentView->pastPlays);
+    return (((int)strlen(currentView->pastPlays)+1) / 40);
 }
 
 // Get the id of current player - ie whose turn is it?
 PlayerID getCurrentPlayer(GameView currentView)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    return 0;
+    //int playerID = (((int)strlen(currentView->pastPlays)+1)%40)/5;
+    //printf("player:%d\n",playerID);
+    return (((int)strlen(currentView->pastPlays)+1)%40)/5;
 }
 
 // Get the current score
@@ -64,8 +64,22 @@ int getHealth(GameView currentView, PlayerID player)
 // Get the current location id of a given player
 LocationID getLocation(GameView currentView, PlayerID player)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    return 0;
+    int read = (getRound(currentView)-1)*40 + player*8; // Get the players string
+    if(read<0) // if no data
+      return -1;
+    // get location abreviation
+    char abbrev[2]; 
+    abbrev[0] = currentView->pastPlays[read+1];
+    abbrev[1] = currentView->pastPlays[read+2];
+    // printf("Loc:%s\n",abbrev);
+    int ID = abbrevToID(abbrev);
+    if(ID != NOWHERE) // if this fails drac is in an unknown location
+      return ID;
+    else if(abbrev[0] == 'C') // unknown city
+      return CITY_UNKNOWN;
+    else if(abbrev[0] == 'S') // unknown sea
+      return SEA_UNKNOWN;
+    return -1;// Something went wrong :(
 }
 
 //// Functions that return information about the history of the game
