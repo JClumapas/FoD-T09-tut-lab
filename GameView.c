@@ -19,10 +19,30 @@ struct gameView {
 // Creates a new GameView to summarise the current state of the game
 GameView newGameView(char *pastPlays, PlayerMessage messages[])
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
+    //initializing gameView variables
     GameView gameView = malloc(sizeof(struct gameView));
-    //gameView->score = 
+    gameView->score = GAME_START_SCORE;
     gameView->pastPlays = pastPlays;
+    int i = 0;
+    int j = 0;
+    while (i<NUM_PLAYERS){
+        while(j<TRAIL_SIZE){
+            gameView->trail[i][j] = UNKNOWN_LOCATION;
+            j++;
+        }
+        i++;
+    }
+    i = 0;
+    while (i < NUM_HUNTERS){
+        gameView->hp[i] = GAME_START_HUNTER_LIFE_POINTS;
+        i++;
+    }
+    gameView->hp[PLAYER_DRACULA] = GAME_START_BLOOD_POINTS;
+
+    //adjust to current state
+    if(pastPlays == NULL){
+        return gameView;
+    }
     return gameView;
 }
      
@@ -61,8 +81,7 @@ int getScore(GameView currentView)
 // Get the current health points for a given player
 int getHealth(GameView currentView, PlayerID player)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    return 0;
+    return currentView->hp[player];
 }
 
 // Get the current location id of a given player
