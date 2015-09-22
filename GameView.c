@@ -12,11 +12,13 @@
 
 struct gameView {
     Map europe;
+    int numRounds;
     int hp[NUM_PLAYERS];
     int trail[NUM_PLAYERS][TRAIL_SIZE];
     int score;
-    char *pastPlays; // past plays 
 };
+
+static PlayerID letterToPlayerID(char l);
      
 
 // Creates a new GameView to summarise the current state of the game
@@ -25,8 +27,8 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     //initializing gameView variables
     GameView gameView = malloc(sizeof(struct gameView));
     gameView->europe = newMap();
+    gameView->numRounds = (((int)strlen(pastPlays)+1) / 40);
     gameView->score = GAME_START_SCORE;
-    gameView->pastPlays = pastPlays;
     int i = 0;
     int j = 0;
     while (i<NUM_PLAYERS){
@@ -51,32 +53,38 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     }
     //the following can probably be cleaned up
     int count = 3;
+    int count2 = 0;
     int curr = 0;
-    int currPlayerID = 0;
-    int Location = 0;
+    PlayerID currPlayerID = 0;
+    LocationID Location = 0;
     char currPlayer[1];
-    char currLocation[2];
-    int pastPlaySize = strlen(pastPlays);
-    int numTurns = (pastPlaySize/7)/5; //fix maths for this to get how many times the player has taken a trun
+    char currLocation[3] = {'\0'};
+    //int pastPlaySize = strlen(pastPlays);
     while (curr < pastPlaySize){
         //the following gets the current player and adds locations to their respective trail array
+        numTurns = gameView->numRounds; //this is not correct
         count = 3;
         currPlayer[0] = pastPlays[curr];
         currPlayerID = letterToPlayerID(currPlayer);
         currLocation[0] = pastPlays[curr+1];
         currLocation[1] = pastPlays[curr+2];
-        gameView->trail[currPlayerID][numTurns];
+        gameView->trail[currPlayerID][numTurns] = abbrevToID(currLocation);
         //clean this if i havent done so before its due
 
         //the following reads the characters after the first 3 to adjust the scores/hp
         if (currPlayerID != PLAYER_DRACULA){
             while (count < 7){
+                if (gameView->hp[currPlayerID] < 0){
+                    //player died and was sent to hospital (lactionID 59)(ST_JOSEPH_AND_ST_MARYS)
+                    gameView->hp[currPlayerID] = 9;
+                }
                 if (pastPlays[curr+count] == 'T'){
                     //apply trap consequences
-                }else if (pastPlays[curr+count] == 'V'){
-                    //apply consequences for meeting immature vampire
+                    gameView->hp[currPlayerID] -= LIFE_LOSS_TRAP_ENCOUNTER;
                 }else if (pastPlays[curr+count] == 'D'){
                     //apply consequences for encountering dracula
+                    gameView->hp[currPlayerID] -= LIFE_LOSS_DRACULA_ENCOUNTER;
+                    gameView->hp[PLAYER_DRACULA] -= LIFE_LOSS_HUNTER_ENCOUNTER;
                 }else{
                     count = 7;
                     continue;
@@ -84,21 +92,62 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
                 count++;
             }
         }else{
-            if (pastPlays[curr+3] == 'T'){
-                //apply trap by dracula
-            }
-            if (pastPlays[curr+4] == 'V'){
-                //apply immature vampire was placed
-            }
-            if (pastPlays[curr+5] == 'M'){
-                //apply trap has worn out
-            }else if (pastPlays[curr+5] == 'V'){
+            gameView->score -= SCORE_LOSS_DRACULA_TURN;
+            //only this case changes the score or hp
+            if (pastPlays[curr+5] == 'V'){
                 //apply immature vampire has matured
+                gameView->score -= SCORE_LOSS_VAMPIRE_MATURES;
             }
         }
+
+        //adjust score according to trails
+        if (currPlayerID != PLAYER_DRACULA){
+            i = 0;
+            //checking for rests in the player's trail
+            while (i < TRAIL_SIZE-1){
+                if(trail[currPlayerID][i] == trail[currPlayerID][i] && trail[currPlayerID][i] != UNKNOWN_LOCATION){
+                    gameView->hp[currPlayerID] += LIFE_GAIN_REST;
+                    if (gameView->hp[currPlayerID] > 9){
+                        //cannot exceed 9hp
+                        gameView->hp[currPlayerID] = 9;
+                    }
+                }
+                i++;
+            }
+
+        }else{
+            i = 0;
+            //checking for castle dracula or sea in the trail
+            while (i < TRAIL_SIZE){
+                if (gameView->trail[currPlayerID][i] == CASTLE_DRACULA){
+                    gameView->hp[currPlayerID] += LIFE_GAIN_CASTLE_DRACULA;
+                }else if (isSea(gameView->trail[currPlayerID][i])){
+                    gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
+                }
+                i++;
+            }
+        }
+        curr += 8;
     }
 
     return gameView;
+}
+
+static PlayerID letterToPlayerID(char l)
+{
+    PlayerID curr;
+    if (l == 'G'){
+        curr = PLAYER_LORD_GODALMING;
+    }else if (l == 'S'){
+        curr = PLAYER_DR_SEWARD;
+    }else if (l == 'H'){
+        curr = PLAYER_VAN_HELSING;
+    }else if (l == 'M'){
+        curr = PLAYER_MINA_HARKER;
+    }else{
+        curr = PLAYER_DRACULA;
+    }
+    return curr;
 }
      
      
@@ -106,6 +155,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
 void disposeGameView(GameView toBeDeleted)
 {
     //COMPLETE THIS IMPLEMENTATION
+    disposeMap(toBeDeleted->europe);
     free( toBeDeleted );
 }
 
@@ -116,7 +166,7 @@ void disposeGameView(GameView toBeDeleted)
 Round getRound(GameView currentView)
 {
     //printf("%s\n",currentView->pastPlays);
-    return (((int)strlen(currentView->pastPlays)+1) / 40);
+    return currentView->numRounds;
 }
 
 // Get the id of current player - ie whose turn is it?
@@ -124,7 +174,8 @@ PlayerID getCurrentPlayer(GameView currentView)
 {
     //int playerID = (((int)strlen(currentView->pastPlays)+1)%40)/5;
     //printf("player:%d\n",playerID);
-    return (((int)strlen(currentView->pastPlays)+1)%40)/5;
+    //return (((int)strlen(currentView->pastPlays)+1)%40)/5;
+    return ((currentView->numRounds-1)%5);
 }
 
 // Get the current score
