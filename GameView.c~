@@ -237,7 +237,7 @@ LocationID *connectedLocations(GameView currentView, int *numLocations,
     assert(g != NULL);
     int numPath = *numLocations; //number of paths
     //int seaID = -1;
-    int locationIDs[100];
+    int locationIDs[10];
     //int start = whereIs(currentView, DRAC)
 
     // find avaliable locations
@@ -247,14 +247,13 @@ LocationID *connectedLocations(GameView currentView, int *numLocations,
             seaID = n->v;
         if(n->v == end){
             if((sea && n->type == SEA) || (road && n->type == ROAD) || (rail && n->type == RAIL)){
-              locationIDs[numPath] = n->v;
-              numPath++; 
+               type[i] = n->type; 
+               numPath++; 
             }
         }
         n = n->next;
     }
-    printf("loc:%d\n",locationIDs[0]);
-    return locationIDs;
+      
     // check for cities ajacent to sea
     //if(seaID != -1 && sea){}
 }

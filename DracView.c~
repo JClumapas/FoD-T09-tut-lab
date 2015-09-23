@@ -92,7 +92,7 @@ void giveMeTheTrail(DracView currentView, PlayerID player,
 // What are my (Dracula's) possible next moves (locations)
 LocationID *whereCanIgo(DracView currentView, int *numLocations, int road, int sea)
 {
-    assert(g != NULL);
+    /*assert(g != NULL);
     int numPath = 0; //number of paths
     int seaID = -1;
     int start = whereIs(currentView, DRAC)
