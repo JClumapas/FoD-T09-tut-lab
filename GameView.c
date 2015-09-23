@@ -16,6 +16,7 @@ struct gameView {
     int hp[NUM_PLAYERS];
     int trail[NUM_PLAYERS][TRAIL_SIZE];
     int score;
+    char *pastPlays; // past plays
 };
 
 static PlayerID letterToPlayerID(char l);
@@ -29,6 +30,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     gameView->europe = newMap();
     gameView->numRounds = (((int)strlen(pastPlays)+1) / 40);
     gameView->score = GAME_START_SCORE;
+    gameView->pastPlays = pastPlays;
     int i = 0;
     int j = 0;
     while (i<NUM_PLAYERS){
@@ -53,19 +55,19 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     }
     //the following can probably be cleaned up
     int count = 3;
-    int count2 = 0;
+    //int count2 = 0;
     int curr = 0;
     PlayerID currPlayerID = 0;
-    LocationID Location = 0;
+    //LocationID Location = 0;
     char currPlayer[1];
     char currLocation[3] = {'\0'};
-    //int pastPlaySize = strlen(pastPlays);
+    int pastPlaySize = strlen(pastPlays);
     while (curr < pastPlaySize){
         //the following gets the current player and adds locations to their respective trail array
-        numTurns = gameView->numRounds; //this is not correct
+        int numTurns = gameView->numRounds; //this is not correct
         count = 3;
         currPlayer[0] = pastPlays[curr];
-        currPlayerID = letterToPlayerID(currPlayer);
+        currPlayerID = letterToPlayerID(*currPlayer);
         currLocation[0] = pastPlays[curr+1];
         currLocation[1] = pastPlays[curr+2];
         gameView->trail[currPlayerID][numTurns] = abbrevToID(currLocation);
@@ -105,7 +107,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
             i = 0;
             //checking for rests in the player's trail
             while (i < TRAIL_SIZE-1){
-                if(trail[currPlayerID][i] == trail[currPlayerID][i] && trail[currPlayerID][i] != UNKNOWN_LOCATION){
+                if(gameView->trail[currPlayerID][i] == gameView->trail[currPlayerID][i] && gameView->trail[currPlayerID][i] != UNKNOWN_LOCATION){
                     gameView->hp[currPlayerID] += LIFE_GAIN_REST;
                     if (gameView->hp[currPlayerID] > 9){
                         //cannot exceed 9hp

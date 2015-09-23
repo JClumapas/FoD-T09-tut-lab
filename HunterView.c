@@ -6,6 +6,7 @@
 #include "Game.h"
 #include "GameView.h"
 #include "HunterView.h"
+#include <string.h>
 // #include "Map.h" ... if you decide to use the Map ADT
      
 struct hunterView {
@@ -20,10 +21,10 @@ HunterView newHunterView(char *pastPlays, PlayerMessage messages[])
     assert(hunterView!=NULL);
     hunterView->view = newGameView(pastPlays,messages);
 
-    Round current = giveMeTheRound(currentView);
-    hunterView->messages = malloc(sizeof(PlayerMessage)*turns)
+    int rounds = giveMeTheRound(hunterView);
+    hunterView->messages = malloc(sizeof(PlayerMessage)*rounds);
     int i;
-    for (i=0;i<turn;i++) {
+    for (i=0;i<rounds;i++) {
         strncpy(hunterView->messages[i], messages[i], MESSAGE_SIZE);
     }
     return hunterView;
@@ -42,7 +43,7 @@ void disposeHunterView(HunterView toBeDeleted)
 //// Functions to return simple information about the current state of the game
 
 // Get the current round
-Round giveMeTheRound(HunterView currentView)
+int giveMeTheRound(HunterView currentView)
 {
     return getRound(currentView->view);
 }
@@ -50,7 +51,7 @@ Round giveMeTheRound(HunterView currentView)
 // Get the id of current player
 PlayerID whoAmI(HunterView currentView)
 {
-    return getCurrentPlayer(current->view);
+    return getCurrentPlayer(currentView->view);
 }
 
 // Get the current score
