@@ -62,7 +62,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     //initializing gameView variables
     GameView gameView = malloc(sizeof(struct gameView));
     gameView->europe = newMap();
-    gameView->numTurns = (((int)strlen(currentView->pastPlays)+1)%40)/5;
+    gameView->numTurns = (((int)strlen(pastPlays)+1)%40)/5;
     //how many turns the players has made, in case someone needs to use this else delete it <- WTF
     //was going to use it for trails but kept it in case someone may need it
     //gameView->numIndTurns[NUM_PLAYERS] = {0};
