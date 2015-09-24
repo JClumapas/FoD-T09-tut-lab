@@ -27,7 +27,7 @@ static PlayerID letterToPlayerID(char l);
 static void addToTrail(GameView currentView, PlayerID currPlayerID, LocationID currLocation)
 {
     int count = TRAIL_SIZE;
-    int i = 0;
+    //int i = 0;
     while (count > 0){
         currentView->trail[currPlayerID][count] = currentView->trail[currPlayerID][count-1];
         count--;
@@ -60,8 +60,8 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     GameView gameView = malloc(sizeof(struct gameView));
     gameView->europe = newMap();
     gameView->numRounds = (((int)strlen(pastPlays)+1) / 40);
-    //how many turns the players has made, in case someone needs to use this else delete it
-    gameView->numIndTruns[NUM_PLAYERS] = {0};
+    //how many turns the players has made, in case someone needs to use this else delete it <- WTF
+    //gameView->numIndTurns[NUM_PLAYERS] = {0};
     gameView->score = GAME_START_SCORE;
     gameView->pastPlays = pastPlays;
     int i = 0;
@@ -97,11 +97,11 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     int pastPlaySize = strlen(pastPlays);
     while (curr < pastPlaySize){
         //the following gets the current player and adds locations to their respective trail array
-        int numTurns = gameView->numRounds; //this is not correct
+        //int numTurns = gameView->numRounds; //this is not correct
         count = 3;
         currPlayer[0] = pastPlays[curr];
         currPlayerID = letterToPlayerID(*currPlayer);
-        gameView->numIndTruns[currPlayerID]++;
+        //gameView->numIndTurns[currPlayerID]++;
         currLocation[0] = pastPlays[curr+1];
         currLocation[1] = pastPlays[curr+2];
         addToTrail(gameView,currPlayerID,abbrevToID(currLocation));
@@ -164,7 +164,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
                 //to add life to dracula
                 if (gameView->trail[currPlayerID][i] == CASTLE_DRACULA){
                     gameView->hp[currPlayerID] += LIFE_GAIN_CASTLE_DRACULA;
-                }else if (gameView->trail[currPlayerID][i] == SEA_UNKNOWN) || isSea(gameView->trail[currPlayerID][i])){
+                }else if (gameView->trail[currPlayerID][i] == SEA_UNKNOWN || isSea(gameView->trail[currPlayerID][i])){
                     gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
                 }
                 i++;
@@ -257,27 +257,6 @@ LocationID *connectedLocations(GameView currentView, int *numLocations,
                                LocationID from, PlayerID player, Round round,
                                int road, int rail, int sea)
 {
-    assert(g != NULL);
-    int numPath = *numLocations; //number of paths
-    //int seaID = -1;
-    int locationIDs[100];
-    //int start = whereIs(currentView, DRAC)
-
-    // find avaliable locations
-    VList n = g->connections[from];
-    while (n != NULL) {
-        if(idToType(n->v) == SEA)
-            seaID = n->v;
-        if(n->v == end){
-            if((sea && n->type == SEA) || (road && n->type == ROAD) || (rail && n->type == RAIL)){
-              locationIDs[numPath] = n->v;
-              numPath++; 
-            }
-        }
-        n = n->next;
-    }
-    printf("loc:%d\n",locationIDs[0]);
-    return locationIDs;
-    // check for cities ajacent to sea
-    //if(seaID != -1 && sea){}
+        
+    return NULL; //keep comiler happy
 }

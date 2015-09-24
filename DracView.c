@@ -6,7 +6,10 @@
 #include "Game.h"
 #include "GameView.h"
 #include "DracView.h"
-// #include "Map.h" ... if you decide to use the Map ADT
+#include <string.h>
+#include "Map.h" //... if you decide to use the Map ADT
+
+#define NUM_MAP_LOCATION 100
      
 struct dracView {
     GameView g;
@@ -41,7 +44,7 @@ DracView newDracView(char *pastPlays, PlayerMessage messages[])
             dracView->numTraps[location]++;
         }
         if (pastPlays[curr+4] == 'V'){
-            dracView->numImVampires[location++];
+            dracView->numImVampires[location]++;
         }
         curr += 40;
     }
@@ -125,7 +128,7 @@ void giveMeTheTrail(DracView currentView, PlayerID player,
 // What are my (Dracula's) possible next moves (locations)
 LocationID *whereCanIgo(DracView currentView, int *numLocations, int road, int sea)
 {
-    assert(g != NULL);
+    /*assert(g != NULL);
     int numPath = 0; //number of paths
     int seaID = -1;
     int start = whereIs(currentView, DRAC)

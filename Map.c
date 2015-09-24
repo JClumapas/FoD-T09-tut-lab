@@ -24,6 +24,46 @@ struct MapRep {
 
 static void addConnections(Map);
 
+/*LocationID *connectedLocations(GameView currentView, int *numLocations,
+                               LocationID from, PlayerID player, Round round,
+                               int road, int rail, int sea)
+{
+    assert(g != NULL);
+    int numPath = *numLocations; //number of paths
+    //int seaID = -1;
+    int locationIDs[100];
+    int railDis = (PlayerID+round)%4;
+    //int start = whereIs(currentView, DRAC)
+
+    // find avaliable locations
+    VList n = g->connections[from];
+    while (n != NULL) {
+        if(idToType(n->v) == SEA)
+            seaID = n->v;
+        if(n->v == end){
+            if((sea && n->type == SEA) || (road && n->type == ROAD)){
+              locationIDs[numPath] = n->v;
+              numPath++; 
+            }
+            if((rail && n->type == RAIL)){
+              locationIDs[numPath] = n->v;
+              numPath++; 
+              
+            }
+        }
+        n = n->next;
+    }
+    //check for cities ajacent to sea
+    //if(seaID != -1 && sea){}
+    
+    int i;
+    for(i = 0; i<numPath; i++){
+      printf("loc:%d\n",locationIDs[0]);
+    }
+    
+    return locationIDs;
+}*/
+
 // Create a new empty graph (for a map)
 // #Vertices always same as NUM_PLACES
 Map newMap()
