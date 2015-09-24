@@ -25,7 +25,7 @@ struct MapRep {
 
 static void addConnections(Map);
 
-int ajacentLocations(int from, int prevLoc, int playerID, int round, int road, int rail, int sea, 
+int adjacentLocations(int from, int prevLoc, int playerID, int round, int road, int rail, int sea, 
    int *locArray, int depth){
     
     int numPath = 0;//number of paths

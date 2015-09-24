@@ -261,7 +261,7 @@ LocationID *connectedLocations(GameView currentView, int *numLocations,
                                int road, int rail, int sea)
 {
     int locations[MAX_CONNECTIONS] = {0};
-    int numLoc = ajacentLocations((int)from, -1, (int)player, (int)round, road, rail, sea, locations, -1);
+    int numLoc = adjacentLocations((int)from, -1, (int)player, (int)round, road, rail, sea, locations, -1);
     int i,e;
     int found;
     LocationID conectedLocs[numLoc];
