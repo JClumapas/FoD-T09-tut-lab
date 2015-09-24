@@ -10,6 +10,8 @@
      
 struct dracView {
     GameView g;
+    int numTraps[NUM_MAP_LOCATION];
+    int numImVampires[NUM_MAP_LOCATION];
     int hello;
 };
      
@@ -21,6 +23,28 @@ DracView newDracView(char *pastPlays, PlayerMessage messages[])
     DracView dracView = malloc(sizeof(struct dracView));
     dracView->g = newGameView(pastPlays, messages);
     dracView->hello = 42;
+    int i = 0;
+    while (i < NUM_MAP_LOCATION){
+        dracView->numTraps[i] = 0;
+        dracView->numImVampires[i] = 0;
+        i++;
+    }
+    int curr = 40;
+    LocationID location = 0;
+    char currLocation[3] = {'\0'};
+    int pastPlaySize = strlen(pastPlays);
+    while (curr < pastPlaySize){
+        currLocation[0] = pastPlays[curr+1];
+        currLocation[1] = pastPlays[curr+2];
+        location = abbrevToID(currLocation);
+        if (pastPlays[curr+3] == 'T'){
+            dracView->numTraps[location]++;
+        }
+        if (pastPlays[curr+4] == 'V'){
+            dracView->numImVampires[location++];
+        }
+        curr += 40;
+    }
     return dracView;
 }
      
@@ -81,6 +105,8 @@ void whatsThere(DracView currentView, LocationID where,
                          int *numTraps, int *numVamps)
 {
     //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
+    *numTraps = currentView->numTraps[where];
+    *numVamps = currentView->numImVampires[where];
     return;
 }
 
