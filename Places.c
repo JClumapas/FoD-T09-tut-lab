@@ -126,6 +126,23 @@ int nameToID(char *name)
 // given a Place abbreviation (2 char), return its ID number
 int abbrevToID(char *abbrev)
 {
+   if (strncmp(abbrev,"C?", 2) == 0){
+      return CITY_UNKNOWN;
+   }else if (strncmp(abbrev,"S?", 2) == 0){
+      return SEA_UNKNOWN;
+   }else if (strncmp(abbrev,"HI", 2) == 0){
+      return HIDE;
+   }else if (strncmp(abbrev,"D1", 2) == 0){
+      return DOUBLE_BACK_1;
+   }else if (strncmp(abbrev,"D2", 2) == 0){
+      return DOUBLE_BACK_2;
+   }else if (strncmp(abbrev,"D3", 2) == 0){
+      return DOUBLE_BACK_3;
+   }else if (strncmp(abbrev,"D4", 2) == 0){
+      return DOUBLE_BACK_4;
+   }else if (strncmp(abbrev,"D5", 2) == 0){
+      return DOUBLE_BACK_5;
+   }
    // an attempt to optimise a linear search
    Place *p;
    Place *first = &places[MIN_MAP_LOCATION];
@@ -133,23 +150,6 @@ int abbrevToID(char *abbrev)
    for (p = first; p <= last; p++) {
       char *c = p->abbrev;
       if (c[0] == abbrev[0] && c[1] == abbrev[1] && c[2] == '\0') return p->id;
-   }
-   if (strcmp(abbrev,"C?")){
-      return CITY_UNKOWN;
-   }else if (strcmp(abbrev,"S?")){
-      return SEA_UNKNOWN;
-   }else if (strcmp(abbrev,"HI")){
-      return HIDE;
-   }else if (strcmp(abbrev,"D1")){
-      return DOUBLE_BACK_1;
-   }else if (strcmp(abbrev,"D2")){
-      return DOUBLE_BACK_2;
-   }else if (strcmp(abbrev,"D3")){
-      return DOUBLE_BACK_3;
-   }else if (strcmp(abbrev,"D4")){
-      return DOUBLE_BACK_4;
-   }else if (strcmp(abbrev,"D5")){
-      return DOUBLE_BACK_5;
    }
    return NOWHERE;
 }
