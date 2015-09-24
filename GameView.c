@@ -14,6 +14,7 @@
 
 struct gameView {
     Map europe;
+    int numTurns;
     int numRounds;
     int hp[NUM_PLAYERS];
     int trail[NUM_PLAYERS][TRAIL_SIZE];
@@ -61,7 +62,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     //initializing gameView variables
     GameView gameView = malloc(sizeof(struct gameView));
     gameView->europe = newMap();
-    gameView->numRounds = (((int)strlen(pastPlays)+1) / 40);
+    gameView->numTurns = (((int)strlen(currentView->pastPlays)+1)%40)/5;
     //how many turns the players has made, in case someone needs to use this else delete it <- WTF
     //was going to use it for trails but kept it in case someone may need it
     //gameView->numIndTurns[NUM_PLAYERS] = {0};
@@ -107,6 +108,9 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
         count = 3;
         currPlayer[0] = pastPlays[curr];
         currPlayerID = letterToPlayerID(*currPlayer);
+        if (currPlayerID == PLAYER_LORD_GODALMING){
+            gameView->numRounds++;
+        }
         //gameView->numIndTurns[currPlayerID]++;
         currLocation[0] = pastPlays[curr+1];
         currLocation[1] = pastPlays[curr+2];
