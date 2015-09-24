@@ -46,7 +46,7 @@ int adjacentLocations(int from, int prevLoc, int playerID, int round, int road, 
            locArray[numPath] = n->v;
            numPath++; 
            printf("choo choo %s\n",idToName(n->v));
-           numPath += ajacentLocations(n->v, from, playerID, round, road, rail, sea, locArray, depth);
+           numPath += adjacentLocations(n->v, from, playerID, round, road, rail, sea, locArray, depth);
          }
         n = n->next;
     }
