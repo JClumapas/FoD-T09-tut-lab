@@ -1,6 +1,7 @@
 // GameView.c ... GameView ADT implementation
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <assert.h>
 #include <string.h>
 #include "Globals.h"
@@ -9,6 +10,7 @@
 #include "Map.h" //use for get connections
      
 #define NUM_HUNTERS 4
+#define MAX_CONNECTIONS 100
 
 struct gameView {
     Map europe;
@@ -277,6 +279,7 @@ LocationID *connectedLocations(GameView currentView, int *numLocations,
     }
       
     numLoc = conectedLocs[0]; //keep comiler happy
+    numLoc = locations[0];
     
     //return conectedLocs; 
     return NULL; //keep comiler happy
