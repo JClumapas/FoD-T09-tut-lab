@@ -25,41 +25,35 @@ struct MapRep {
 
 static void addConnections(Map);
 
-int ajacentLocations(int from, int playerID, int round, int road, int rail, int sea, int locArray, int depth){
+int ajacentLocations(int from, int prevLoc, int playerID, int round, int road, int rail, int sea, 
+   int *locArray, int depth){
     
     int numPath = 0;//number of paths
-    //int seaID = -1;
-    int locationIDs[100];
     if(depth == -1)
       depth = (playerID+round)%4;
-    //int start = whereIs(currentView, DRAC)
     Map g = newMap();
     assert(g != NULL);
+    
     // find avaliable locations
     VList n = g->connections[from];
     while (n != NULL) {
          if((sea && n->type == SEA) || (road && n->type == ROAD)){
-           locationIDs[numPath] = n->v;
+           locArray[numPath] = n->v;
            numPath++; 
             printf("%s by %d ,",idToName(n->v),n->type);
          }
-         if((rail && n->type == RAIL) && depth != 0 && locArray != n->v){
-           locationIDs[numPath] = n->v;
+         if((rail && n->type == RAIL) && depth != 0 && prevLoc != n->v){
+           locArray[numPath] = n->v;
            numPath++; 
            printf("choo choo %s\n",idToName(n->v));
-           //printf("choo choo\n");
-           ajacentLocations(n->v, 2, 4, 1, 1, 1, from, depth);
+           numPath += ajacentLocations(n->v, from, playerID, round, road, rail, sea, locArray, depth);
          }
         n = n->next;
     }
     
-    /*int i;
-    for(i = 0; i<numPath; i++){
-      printf("loc:%d\n",locationIDs[i]);
-    }*/
     printf("\n\n");
     
-    return locationIDs[0];
+    return numPath;
 }
 
 // Create a new empty graph (for a map)
