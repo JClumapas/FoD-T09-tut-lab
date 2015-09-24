@@ -19,8 +19,39 @@ struct gameView {
     char *pastPlays; // past plays
 };
 
+//not sure if they still need to be declared when they are defined before used
+static void addToTrail(GameView currentView, PlayerID currPlayerID, LocationID currLocation);
 static PlayerID letterToPlayerID(char l);
      
+//adds the last seen location to the start of the array and pushes the rest along
+static void addToTrail(GameView currentView, PlayerID currPlayerID, LocationID currLocation)
+{
+    int count = TRAIL_SIZE;
+    int i = 0;
+    while (count > 0){
+        currentView->trail[currPlayerID][count] = currentView->trail[currPlayerID][count-1];
+        count--;
+    }
+    currentView->trail[currPlayerID][0] = currLocation;
+}
+
+//converts first letter of pastplays to its corresponding playerID
+static PlayerID letterToPlayerID(char l)
+{
+    PlayerID curr;
+    if (l == 'G'){
+        curr = PLAYER_LORD_GODALMING;
+    }else if (l == 'S'){
+        curr = PLAYER_DR_SEWARD;
+    }else if (l == 'H'){
+        curr = PLAYER_VAN_HELSING;
+    }else if (l == 'M'){
+        curr = PLAYER_MINA_HARKER;
+    }else{
+        curr = PLAYER_DRACULA;
+    }
+    return curr;
+}
 
 // Creates a new GameView to summarise the current state of the game
 GameView newGameView(char *pastPlays, PlayerMessage messages[])
@@ -29,6 +60,8 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     GameView gameView = malloc(sizeof(struct gameView));
     gameView->europe = newMap();
     gameView->numRounds = (((int)strlen(pastPlays)+1) / 40);
+    //how many turns the players has made, in case someone needs to use this else delete it
+    gameView->numIndTruns[NUM_PLAYERS] = {0};
     gameView->score = GAME_START_SCORE;
     gameView->pastPlays = pastPlays;
     int i = 0;
@@ -68,17 +101,22 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
         count = 3;
         currPlayer[0] = pastPlays[curr];
         currPlayerID = letterToPlayerID(*currPlayer);
+        gameView->numIndTruns[currPlayerID]++;
         currLocation[0] = pastPlays[curr+1];
         currLocation[1] = pastPlays[curr+2];
-        gameView->trail[currPlayerID][numTurns] = abbrevToID(currLocation);
+        addToTrail(gameView,currPlayerID,abbrevToID(currLocation));
         //clean this if i havent done so before its due
 
         //the following reads the characters after the first 3 to adjust the scores/hp
         if (currPlayerID != PLAYER_DRACULA){
             while (count < 7){
                 if (gameView->hp[currPlayerID] < 0){
-                    //player died and was sent to hospital (lactionID 59)(ST_JOSEPH_AND_ST_MARYS)
+                    //player died and was sent to hospital (locationID 59)(ST_JOSEPH_AND_ST_MARYS)
+                    gameView->score -= SCORE_LOSS_HUNTER_HOSPITAL;
                     gameView->hp[currPlayerID] = 9;
+                    //not sure if we stop checking for damage after being sent to hospital
+                    //hunter died
+                    break;
                 }
                 if (pastPlays[curr+count] == 'T'){
                     //apply trap consequences
@@ -107,6 +145,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
             i = 0;
             //checking for rests in the player's trail
             while (i < TRAIL_SIZE-1){
+                //check if hunter rested
                 if(gameView->trail[currPlayerID][i] == gameView->trail[currPlayerID][i] && gameView->trail[currPlayerID][i] != UNKNOWN_LOCATION){
                     gameView->hp[currPlayerID] += LIFE_GAIN_REST;
                     if (gameView->hp[currPlayerID] > 9){
@@ -121,9 +160,11 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
             i = 0;
             //checking for castle dracula or sea in the trail
             while (i < TRAIL_SIZE){
+                //if i dont get the chance to could someone add cases for teleporting or double backing to castle dracula
+                //to add life to dracula
                 if (gameView->trail[currPlayerID][i] == CASTLE_DRACULA){
                     gameView->hp[currPlayerID] += LIFE_GAIN_CASTLE_DRACULA;
-                }else if (isSea(gameView->trail[currPlayerID][i])){
+                }else if (gameView->trail[currPlayerID][i] == SEA_UNKNOWN) || isSea(gameView->trail[currPlayerID][i])){
                     gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
                 }
                 i++;
@@ -133,25 +174,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     }
 
     return gameView;
-}
-
-static PlayerID letterToPlayerID(char l)
-{
-    PlayerID curr;
-    if (l == 'G'){
-        curr = PLAYER_LORD_GODALMING;
-    }else if (l == 'S'){
-        curr = PLAYER_DR_SEWARD;
-    }else if (l == 'H'){
-        curr = PLAYER_VAN_HELSING;
-    }else if (l == 'M'){
-        curr = PLAYER_MINA_HARKER;
-    }else{
-        curr = PLAYER_DRACULA;
-    }
-    return curr;
-}
-     
+}    
      
 // Frees all memory previously allocated for the GameView toBeDeleted
 void disposeGameView(GameView toBeDeleted)
