@@ -2,11 +2,11 @@
 
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 #include "Globals.h"
 #include "Game.h"
 #include "GameView.h"
 #include "DracView.h"
-#include <string.h>
 #include "Map.h" //... if you decide to use the Map ADT
 
 #define NUM_MAP_LOCATION 100
@@ -66,21 +66,18 @@ void disposeDracView(DracView toBeDeleted)
 // Get the current round
 Round giveMeTheRound(DracView currentView)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
     return getRound(currentView->g);
 }
 
 // Get the current score
 int giveMeTheScore(DracView currentView)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
     return getScore(currentView->g);
 }
 
 // Get the current health points for a given player
 int howHealthyIs(DracView currentView, PlayerID player)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
     return getHealth(currentView->g, player);
 }
 
@@ -89,6 +86,8 @@ LocationID whereIs(DracView currentView, PlayerID player)
 {
     //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
     //not yet correct
+    //This should be correct if the pastPlays string given has exact locations not hie or double back etc
+    //else this needs to be taken care of
     return getLocation(currentView->g, player);
 }
 
@@ -96,7 +95,6 @@ LocationID whereIs(DracView currentView, PlayerID player)
 void lastMove(DracView currentView, PlayerID player,
                  LocationID *start, LocationID *end)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
     LocationID trail[TRAIL_SIZE];
     getHistory(currentView->g, player, trail);
     *start = trail[1];
@@ -107,7 +105,6 @@ void lastMove(DracView currentView, PlayerID player,
 void whatsThere(DracView currentView, LocationID where,
                          int *numTraps, int *numVamps)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
     *numTraps = currentView->numTraps[where];
     *numVamps = currentView->numImVampires[where];
     return;
@@ -119,7 +116,6 @@ void whatsThere(DracView currentView, LocationID where,
 void giveMeTheTrail(DracView currentView, PlayerID player,
                             LocationID trail[TRAIL_SIZE])
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
     getHistory(currentView->g, player, trail);
 }
 
