@@ -182,7 +182,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
                     default:
                     break;
                 }
-                if (location == HIDE){location++}
+                if (location == HIDE){location++;}
             }else if (location <= MAX_MAP_LOCATION){
                 if (isSea(location)){
                     gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
