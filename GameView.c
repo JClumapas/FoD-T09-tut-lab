@@ -98,9 +98,10 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     char currPlayer[1];
     char currLocation[3] = {'\0'};
     int pastPlaySize = strlen(pastPlays);
+    printf("pastPlaySize is %d\n", pastPlaySize);
     while (curr < pastPlaySize){
         //prints messages just for fun
-        printf("%s",messages[count2]);
+        printf("%s\n",messages[count2]);
         //the following gets the current player and adds locations to their respective trail array
         //int numTurns = gameView->numRounds; //this is not correct
         count = 3;
