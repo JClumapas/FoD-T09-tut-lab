@@ -61,6 +61,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     gameView->europe = newMap();
     gameView->numRounds = (((int)strlen(pastPlays)+1) / 40);
     //how many turns the players has made, in case someone needs to use this else delete it <- WTF
+    //was going to use it for trails but kept it in case someone may need it
     //gameView->numIndTurns[NUM_PLAYERS] = {0};
     gameView->score = GAME_START_SCORE;
     gameView->pastPlays = pastPlays;
