@@ -17,7 +17,7 @@ struct gameView {
     int numTurns;
     int numRounds;
     int hp[NUM_PLAYERS];
-    int trail[NUM_PLAYERS][TRAIL_SIZE];
+    LocationID trail[NUM_PLAYERS][TRAIL_SIZE];
     int score;
     char *pastPlays; // past plays
 };
@@ -95,7 +95,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     int count2 = 0;
     int curr = 0;
     PlayerID currPlayerID = 0;
-    //LocationID Location = 0;
+    LocationID location = 0;
     char currPlayer[1];
     char currLocation[3] = {'\0'};
     int pastPlaySize = strlen(pastPlays);
@@ -114,7 +114,8 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
         //gameView->numIndTurns[currPlayerID]++;
         currLocation[0] = pastPlays[curr+1];
         currLocation[1] = pastPlays[curr+2];
-        addToTrail(gameView,currPlayerID,abbrevToID(currLocation));
+        location = abbrevToID(currLocation);
+        addToTrail(gameView,currPlayerID,location);
         //clean this if i havent done so before its due
 
         //the following reads the characters after the first 3 to adjust the scores/hp
@@ -152,32 +153,45 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
 
         //adjust score according to trails
         if (currPlayerID != PLAYER_DRACULA){
-            i = 0;
-            //checking for rests in the player's trail
-            while (i < TRAIL_SIZE-1){
+            if (gameView->numRounds > 1){
                 //check if hunter rested
-                if(gameView->trail[currPlayerID][i] == gameView->trail[currPlayerID][i] && gameView->trail[currPlayerID][i] != UNKNOWN_LOCATION){
+                if (location == gameView->trail[currPlayerID][1]){
                     gameView->hp[currPlayerID] += LIFE_GAIN_REST;
-                    if (gameView->hp[currPlayerID] > 9){
-                        //cannot exceed 9hp
-                        gameView->hp[currPlayerID] = 9;
-                    }
+                    //hp cannot exceed 9
+                    gameView->hp[currPlayerID] = 9;
                 }
-                i++;
             }
-
         }else{
-            i = 0;
-            //checking for castle dracula or sea in the trail
-            while (i < TRAIL_SIZE){
-                //if i dont get the chance to could someone add cases for teleporting or double backing to castle dracula
-                //to add life to dracula
-                if (gameView->trail[currPlayerID][i] == CASTLE_DRACULA){
-                    gameView->hp[currPlayerID] += LIFE_GAIN_CASTLE_DRACULA;
-                }else if (gameView->trail[currPlayerID][i] == SEA_UNKNOWN || isSea(gameView->trail[currPlayerID][i])){
+            if (location >= HIDE && location <= DOUBLE_BACK_5){
+                switch (location){
+                    case DOUBLE_BACK_1:
+                    location = gameView->trail[currPlayerID][1];
+                    break;
+                    case DOUBLE_BACK_2:
+                    location = gameView->trail[currPlayerID][2];
+                    break;
+                    case DOUBLE_BACK_3:
+                    location = gameView->trail[currPlayerID][3];
+                    break;
+                    case DOUBLE_BACK_4:
+                    location = gameView->trail[currPlayerID][4];
+                    break;
+                    case DOUBLE_BACK_5:
+                    location = gameView->trail[currPlayerID][5];
+                    break;
+                    default:
+                    break;
+                }
+                if (location == HIDE){location++}
+            }else if (location <= MAX_MAP_LOCATION){
+                if (isSea(location)){
                     gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
                 }
-                i++;
+            }
+            if (location == CASTLE_DRACULA || location == TELEPORT){
+                gameView->hp[currPlayerID] += LIFE_GAIN_CASTLE_DRACULA;
+            }else if (location == SEA_UNKNOWN){
+                gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
             }
         }
         count2++;
