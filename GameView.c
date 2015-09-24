@@ -258,6 +258,26 @@ LocationID *connectedLocations(GameView currentView, int *numLocations,
                                LocationID from, PlayerID player, Round round,
                                int road, int rail, int sea)
 {
-    ajacentLocations((int)from, (int)player, (int)round, (int)road, rail, sea, numLocations, -1);
+    int locations[MAX_CONNECTIONS] = {0};
+    int numLoc = ajacentLocations((int)from, -1, (int)player, (int)round, road, rail, sea, locations, -1);
+    int i,e;
+    int found;
+    LocationID conectedLocs[numLoc];
+    // remove duplicates and backtracks for drac
+    for(i=0; i<numLoc; i++){
+      found = 0;
+      for(e=0; e<*numLocations && !found; e++){
+         if(locations[i] == conectedLocs[e])
+            found = 1;
+       }
+       if(!found){
+         conectedLocs[*numLocations] = locations[i];
+         *numLocations+=1;
+       }
+    }
+      
+    numLoc = conectedLocs[0]; //keep comiler happy
+    
+    //return conectedLocs; 
     return NULL; //keep comiler happy
 }
