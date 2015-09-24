@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include "Map.h"
 #include "Places.h"
+#include "Globals.h"
 
 typedef struct vNode *VList;
 
@@ -24,45 +25,42 @@ struct MapRep {
 
 static void addConnections(Map);
 
-/*LocationID *connectedLocations(GameView currentView, int *numLocations,
-                               LocationID from, PlayerID player, Round round,
-                               int road, int rail, int sea)
-{
-    assert(g != NULL);
-    int numPath = *numLocations; //number of paths
+int ajacentLocations(int from, int playerID, int round, int road, int rail, int sea, int locArray, int depth){
+    
+    int numPath = 0;//number of paths
     //int seaID = -1;
     int locationIDs[100];
-    int railDis = (PlayerID+round)%4;
+    if(depth == -1)
+      depth = (playerID+round)%4;
     //int start = whereIs(currentView, DRAC)
-
+    Map g = newMap();
+    assert(g != NULL);
     // find avaliable locations
     VList n = g->connections[from];
     while (n != NULL) {
-        if(idToType(n->v) == SEA)
-            seaID = n->v;
-        if(n->v == end){
-            if((sea && n->type == SEA) || (road && n->type == ROAD)){
-              locationIDs[numPath] = n->v;
-              numPath++; 
-            }
-            if((rail && n->type == RAIL)){
-              locationIDs[numPath] = n->v;
-              numPath++; 
-              
-            }
-        }
+         if((sea && n->type == SEA) || (road && n->type == ROAD)){
+           locationIDs[numPath] = n->v;
+           numPath++; 
+            printf("%s by %d ,",idToName(n->v),n->type);
+         }
+         if((rail && n->type == RAIL) && depth != 0 && locArray != n->v){
+           locationIDs[numPath] = n->v;
+           numPath++; 
+           printf("choo choo %s\n",idToName(n->v));
+           //printf("choo choo\n");
+           ajacentLocations(n->v, 2, 4, 1, 1, 1, from, depth);
+         }
         n = n->next;
     }
-    //check for cities ajacent to sea
-    //if(seaID != -1 && sea){}
     
-    int i;
+    /*int i;
     for(i = 0; i<numPath; i++){
-      printf("loc:%d\n",locationIDs[0]);
-    }
+      printf("loc:%d\n",locationIDs[i]);
+    }*/
+    printf("\n\n");
     
-    return locationIDs;
-}*/
+    return locationIDs[0];
+}
 
 // Create a new empty graph (for a map)
 // #Vertices always same as NUM_PLACES

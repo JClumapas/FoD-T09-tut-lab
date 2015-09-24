@@ -257,6 +257,6 @@ LocationID *connectedLocations(GameView currentView, int *numLocations,
                                LocationID from, PlayerID player, Round round,
                                int road, int rail, int sea)
 {
-        
+    ajacentLocations((int)from, (int)player, (int)round, (int)road, rail, sea, numLocations, -1);
     return NULL; //keep comiler happy
 }
