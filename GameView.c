@@ -61,27 +61,28 @@ static LocationID handleDoubleBack(GameView gameView, PlayerID currPlayer, Locat
     LocationID location = loc;
     switch (location){
         case DOUBLE_BACK_1:
-        location = gameView->trail[currPlayerID][1];
+        location = gameView->trail[currPlayer][1];
         index = 1;
         break;
         case DOUBLE_BACK_2:
-        location = gameView->trail[currPlayerID][2];
+        location = gameView->trail[currPlayer][2];
         index = 2;
         break;
         case DOUBLE_BACK_3:
-        location = gameView->trail[currPlayerID][3];
+        location = gameView->trail[currPlayer][3];
         index = 3;
         break;
         case DOUBLE_BACK_4:
-        location = gameView->trail[currPlayerID][4];
+        location = gameView->trail[currPlayer][4];
         index = 4;
         break;
         case DOUBLE_BACK_5:
-        location = gameView->trail[currPlayerID][5];
+        location = gameView->trail[currPlayer][5];
         index = 5;
         break;
         default:
         break;
+    }
     return location;
 }
 
@@ -199,7 +200,6 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
             //printf("location is %d",location);
             if (location >= HIDE && location <= DOUBLE_BACK_5){
                     location = handleDoubleBack(gameView, currPlayer, location);
-                }
                 if (location == HIDE){location = gameView->trail[currPlayerID][index+1];}
             }else if (location <= MAX_MAP_LOCATION){
                 if (isSea(location)){
