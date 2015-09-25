@@ -32,7 +32,7 @@ DracView newDracView(char *pastPlays, PlayerMessage messages[])
         dracView->numImVampires[i] = 0;
         i++;
     }
-    int curr = 40;
+    int curr = 32;
     LocationID location = 0;
     char currLocation[3] = {'\0'};
     int pastPlaySize = strlen(pastPlays);
