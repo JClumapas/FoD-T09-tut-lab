@@ -157,6 +157,19 @@ LocationID *whereCanIgo(DracView currentView, int *numLocations, int road, int s
 LocationID *whereCanTheyGo(DracView currentView, int *numLocations,
                            PlayerID player, int road, int rail, int sea)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    return NULL;
+    {
+   LocationID *where = NULL;
+    int currentRound;
+    LocationID currentLocation = 0;
+    if (player == PLAYER_DRACULA) {
+        where = whereCanIgo(currentView,numLocations, road,sea);
+    } else {
+        currentLocation = whereIs(currentView, player);
+        currentRound = giveMeTheRound(currentView);
+        where = connectedLocations(currentView->g, numLocations,
+                            currentLocation, player, currentRound,
+                                     road, rail, sea);
+    }
+
+    return where;
 }
