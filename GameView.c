@@ -57,7 +57,7 @@ static PlayerID letterToPlayerID(char l)
     return curr;
 }
 
-static locationID handleDoubleBack(GameView gameView, locationID loc){
+static LocationID handleDoubleBack(GameView gameView, LocationID loc){
     locationID location = loc;
     switch (location){
         case DOUBLE_BACK_1:
