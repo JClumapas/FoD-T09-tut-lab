@@ -30,13 +30,15 @@ static LocationID handleDoubleBack(GameView gameView, PlayerID currPlayer, Locat
 //adds the last seen location to the start of the array and pushes the rest along
 static void addToTrail(GameView currentView, PlayerID currPlayerID, LocationID currLocation)
 {
-    int count = TRAIL_SIZE;
+   //printf("in addToTrail\n");
+    int count = TRAIL_SIZE-1;
     //int i = 0;
     while (count > 0){
         currentView->trail[currPlayerID][count] = currentView->trail[currPlayerID][count-1];
         count--;
     }
     currentView->trail[currPlayerID][0] = currLocation;
+    //printf("added %d to trail\n", currLocation);
 }
 
 //converts first letter of pastplays to its corresponding playerID
@@ -105,6 +107,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
             gameView->trail[i][j] = UNKNOWN_LOCATION;
             j++;
         }
+        j=0;
         i++;
     }
     i = 0;
@@ -199,14 +202,22 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
             int index = 0;
             //printf("location is %d",location);
             if (location >= HIDE && location <= DOUBLE_BACK_5){
+               printf("found a double back!\n");
                     location = handleDoubleBack(gameView, currPlayerID, location, &index);
+                    printf("location is %d\n",location);
                 if (location == HIDE){location = gameView->trail[currPlayerID][index+1];}
-            }else if (location <= MAX_MAP_LOCATION){
+            }
+            if (location <= MAX_MAP_LOCATION){
                 if (isSea(location)){
                     gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
                     //printf("sea--dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
                 }else if (location >= DOUBLE_BACK_1 && location <= DOUBLE_BACK_5){
                     location = handleDoubleBack(gameView, currPlayerID, location, &index);
+                    if (location <= MAX_MAP_LOCATION){
+                      if (isSea(location)){
+                          gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
+                      }
+                    }
                 }
             }
             if (location == CASTLE_DRACULA || location == TELEPORT){
@@ -214,8 +225,8 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
             }else if (location == SEA_UNKNOWN){
                //printf("location is %d\n",location);
                 gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
-                //printf("sea unknown\n");
-                // printf("sea--dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
+                printf("sea unknown\n");
+                 printf("sea--dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
             }
         }
         count2++;
