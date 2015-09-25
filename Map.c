@@ -25,13 +25,12 @@ struct MapRep {
 
 static void addConnections(Map);
 
-int adjacentLocations(int from, int prevLoc, int playerID, int round, int road, int rail, int sea, 
+int adjacentLocations(Map g, int from, int prevLoc, int playerID, int round, int road, int rail, int sea, 
    int *locArray, int depth){
     
     int numPath = 0;//number of paths
     if(depth == -1)
       depth = (playerID+round)%4;
-    Map g = newMap();
     assert(g != NULL);
     
     // find avaliable locations
@@ -45,12 +44,11 @@ int adjacentLocations(int from, int prevLoc, int playerID, int round, int road, 
            locArray[numPath] = n->v;
            numPath++; 
            // recersivlly go to next station
-           numPath += adjacentLocations(n->v, from, playerID, round, 0, rail, 0, locArray, depth);
+           numPath += adjacentLocations(g, n->v, from, playerID, round, 0, rail, 0, locArray, depth);
          }
         n = n->next;
     }
     
-    disposeMap(g);
     return numPath;
 }
 
