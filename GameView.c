@@ -57,27 +57,27 @@ static PlayerID letterToPlayerID(char l)
     return curr;
 }
 
-static LocationID handleDoubleBack(GameView gameView, PlayerID currPlayer, LocationID loc){
+static LocationID handleDoubleBack(GameView gameView, PlayerID currPlayerID, LocationID loc){
     LocationID location = loc;
     switch (location){
         case DOUBLE_BACK_1:
-        location = gameView->trail[currPlayer][1];
+        location = gameView->trail[currPlayerID][1];
         index = 1;
         break;
         case DOUBLE_BACK_2:
-        location = gameView->trail[currPlayer][2];
+        location = gameView->trail[currPlayerID][2];
         index = 2;
         break;
         case DOUBLE_BACK_3:
-        location = gameView->trail[currPlayer][3];
+        location = gameView->trail[currPlayerID][3];
         index = 3;
         break;
         case DOUBLE_BACK_4:
-        location = gameView->trail[currPlayer][4];
+        location = gameView->trail[currPlayerID][4];
         index = 4;
         break;
         case DOUBLE_BACK_5:
-        location = gameView->trail[currPlayer][5];
+        location = gameView->trail[currPlayerID][5];
         index = 5;
         break;
         default:
@@ -199,14 +199,14 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
             int index = 0;
             //printf("location is %d",location);
             if (location >= HIDE && location <= DOUBLE_BACK_5){
-                    location = handleDoubleBack(gameView, currPlayer, location);
+                    location = handleDoubleBack(gameView, currPlayerID, location);
                 if (location == HIDE){location = gameView->trail[currPlayerID][index+1];}
             }else if (location <= MAX_MAP_LOCATION){
                 if (isSea(location)){
                     gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
                     //printf("sea--dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
                 }else if (location >= DOUBLE_BACK_1 && location <= DOUBLE_BACK_5){
-                    location = handleDoubleBack(gameView, currPlayer, location);
+                    location = handleDoubleBack(gameView, currPlayerID, location);
                 }
             }
             if (location == CASTLE_DRACULA || location == TELEPORT){
