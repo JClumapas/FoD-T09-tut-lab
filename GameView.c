@@ -62,7 +62,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     //initializing gameView variables
     GameView gameView = malloc(sizeof(struct gameView));
     gameView->europe = newMap();
-    //gameView->numTurns = (((int)strlen(pastPlays)+1)%40)/5;
+    gameView->numTurns = (((int)strlen(pastPlays)+1)%40)/5;
     //how many turns the players has made, in case someone needs to use this else delete it <- WTF
     //was going to use it for trails but kept it in case someone may need it
     //gameView->numIndTurns[NUM_PLAYERS] = {0};
@@ -83,7 +83,6 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
         i++;
     }
     gameView->hp[PLAYER_DRACULA] = GAME_START_BLOOD_POINTS;
-    printf("dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
 
     //adjust to current state
     //here we want to analyse pastPlays string and adjust 
@@ -115,9 +114,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
         //gameView->numIndTurns[currPlayerID]++;
         currLocation[0] = pastPlays[curr+1];
         currLocation[1] = pastPlays[curr+2];
-        printf("loc is %s\n",currLocation);
         location = abbrevToID(currLocation);
-        printf("location is %d\n",location);
         addToTrail(gameView,currPlayerID,location);
         //clean this if i havent done so before its due
 
@@ -139,7 +136,6 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
                     //apply consequences for encountering dracula
                     gameView->hp[currPlayerID] -= LIFE_LOSS_DRACULA_ENCOUNTER;
                     gameView->hp[PLAYER_DRACULA] -= LIFE_LOSS_HUNTER_ENCOUNTER;
-                    //printf("hunter--dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
                 }else{
                     count = 7;
                     continue;
@@ -166,47 +162,36 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
                 }
             }
         }else{
-            int index = 0;
-            //printf("location is %d",location);
             if (location >= HIDE && location <= DOUBLE_BACK_5){
                 switch (location){
                     case DOUBLE_BACK_1:
                     location = gameView->trail[currPlayerID][1];
-                    index = 1;
                     break;
                     case DOUBLE_BACK_2:
                     location = gameView->trail[currPlayerID][2];
-                    index = 2;
                     break;
                     case DOUBLE_BACK_3:
                     location = gameView->trail[currPlayerID][3];
-                    index = 3;
                     break;
                     case DOUBLE_BACK_4:
                     location = gameView->trail[currPlayerID][4];
-                    index = 4;
                     break;
                     case DOUBLE_BACK_5:
                     location = gameView->trail[currPlayerID][5];
-                    index = 5;
                     break;
                     default:
                     break;
                 }
-                if (location == HIDE){location = gameView->trail[currPlayerID][index+1];}
+                if (location == HIDE){location++;}
             }else if (location <= MAX_MAP_LOCATION){
                 if (isSea(location)){
                     gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
-                    //printf("sea--dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
                 }
             }
             if (location == CASTLE_DRACULA || location == TELEPORT){
                 gameView->hp[currPlayerID] += LIFE_GAIN_CASTLE_DRACULA;
             }else if (location == SEA_UNKNOWN){
-               //printf("location is %d\n",location);
                 gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
-                //printf("sea unknown\n");
-                // printf("sea--dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
             }
         }
         count2++;
@@ -239,8 +224,8 @@ PlayerID getCurrentPlayer(GameView currentView)
 {
     //int playerID = (((int)strlen(currentView->pastPlays)+1)%40)/5;
     //printf("player:%d\n",playerID);
-    return (((int)strlen(currentView->pastPlays)+1)%40)/5;
-    //return ((currentView->numRounds-1)%5);
+    //return (((int)strlen(currentView->pastPlays)+1)%40)/5;
+    return ((currentView->numRounds-1)%5);
 }
 
 // Get the current score
