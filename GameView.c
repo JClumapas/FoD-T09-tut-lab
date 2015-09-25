@@ -115,9 +115,9 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
         //gameView->numIndTurns[currPlayerID]++;
         currLocation[0] = pastPlays[curr+1];
         currLocation[1] = pastPlays[curr+2];
-        printf("loc is %s\n",currLocation);
+        //printf("loc is %s\n",currLocation);
         location = abbrevToID(currLocation);
-        printf("location is %d\n",location);
+        //printf("location is %d\n",location);
         addToTrail(gameView,currPlayerID,location);
         //clean this if i havent done so before its due
 
@@ -231,14 +231,14 @@ void disposeGameView(GameView toBeDeleted)
 Round getRound(GameView currentView)
 {
     //printf("%s\n",currentView->pastPlays);
+    currentView->numRounds = (((int)strlen(currentView->pastPlays)+1) / 40);
     return currentView->numRounds;
 }
 
 // Get the id of current player - ie whose turn is it?
 PlayerID getCurrentPlayer(GameView currentView)
 {
-    //int playerID = (((int)strlen(currentView->pastPlays)+1)%40)/5;
-    //printf("player:%d\n",playerID);
+    printf("player:%d\n",(int)strlen(currentView->pastPlays));
     return (((int)strlen(currentView->pastPlays)+1)%40)/5;
     //return ((currentView->numRounds-1)%5);
 }
@@ -258,15 +258,22 @@ int getHealth(GameView currentView, PlayerID player)
 // Get the current location id of a given player
 LocationID getLocation(GameView currentView, PlayerID player)
 {
-    int read = (getRound(currentView)-1)*40 + player*8; // Get the players string
+   
+    int read = (getRound(currentView))*40 + player*8; // Get the players string
+    if(read > (int)strlen(currentView->pastPlays)){
+      read -= 40;
+    }
+      
+    //read = read - 39;
     if(read<0) // if no data
       return -1;
-    // get location abreviation
+    // get location abreviationc
     char abbrev[2]; 
     abbrev[0] = currentView->pastPlays[read+1];
     abbrev[1] = currentView->pastPlays[read+2];
-    // printf("Loc:%s\n",abbrev);
+    //printf("%s\n
     int ID = abbrevToID(abbrev);
+    //printf("Loc:%s %d\n",abbrev,ID);
     if(ID != NOWHERE) // if this fails drac is in an unknown location
       return ID;
     else if(abbrev[0] == 'C') // unknown city
