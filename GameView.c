@@ -25,7 +25,7 @@ struct gameView {
 //not sure if they still need to be declared when they are defined before used
 static void addToTrail(GameView currentView, PlayerID currPlayerID, LocationID currLocation);
 static PlayerID letterToPlayerID(char l);
-static LocationID handleDoubleBack(GameView gameView, LocationID loc);
+static LocationID handleDoubleBack(GameView gameView, PlayerID currPlayer, LocationID loc);
      
 //adds the last seen location to the start of the array and pushes the rest along
 static void addToTrail(GameView currentView, PlayerID currPlayerID, LocationID currLocation)
@@ -57,7 +57,7 @@ static PlayerID letterToPlayerID(char l)
     return curr;
 }
 
-static LocationID handleDoubleBack(GameView gameView, LocationID loc){
+static LocationID handleDoubleBack(GameView gameView, PlayerID currPlayer, LocationID loc){
     LocationID location = loc;
     switch (location){
         case DOUBLE_BACK_1:
@@ -198,7 +198,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
             int index = 0;
             //printf("location is %d",location);
             if (location >= HIDE && location <= DOUBLE_BACK_5){
-                    location = handleDoubleBack(gameView, location);
+                    location = handleDoubleBack(gameView, currPlayer, location);
                 }
                 if (location == HIDE){location = gameView->trail[currPlayerID][index+1];}
             }else if (location <= MAX_MAP_LOCATION){
@@ -206,7 +206,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
                     gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
                     //printf("sea--dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
                 }else if (location >= DOUBLE_BACK_1 && location <= DOUBLE_BACK_5){
-                    location = handleDoubleBack(gameView, location);
+                    location = handleDoubleBack(gameView, currPlayer, location);
                 }
             }
             if (location == CASTLE_DRACULA || location == TELEPORT){
