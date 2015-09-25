@@ -25,7 +25,7 @@ struct gameView {
 //not sure if they still need to be declared when they are defined before used
 static void addToTrail(GameView currentView, PlayerID currPlayerID, LocationID currLocation);
 static PlayerID letterToPlayerID(char l);
-static locationID handleDoubleBack(GameView gameView, locationID loc);
+static LocationID handleDoubleBack(GameView gameView, LocationID loc);
      
 //adds the last seen location to the start of the array and pushes the rest along
 static void addToTrail(GameView currentView, PlayerID currPlayerID, LocationID currLocation)
