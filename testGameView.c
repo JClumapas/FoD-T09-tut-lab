@@ -11,9 +11,9 @@ int main()
 {
     int i;
     GameView gv;
-    int locArray;
-    locArray = 0;
-    adjacentLocations(39, 2, 4, 1, 1, 1, 1, &locArray, -1);
+    //int locArray;
+    //locArray = 0;
+    //adjacentLocations(39, 2, 4, 1, 1, 1, 1, &locArray, -1);
     printf("Test basic empty initialisation\n");
     PlayerMessage messages1[] = {};
     gv = newGameView("", messages1);
