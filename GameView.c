@@ -313,7 +313,7 @@ LocationID *connectedLocations(GameView currentView, int *numLocations,
                                LocationID from, PlayerID player, Round round,
                                int road, int rail, int sea)
 {
-    LocationID *conectedLocs = malloc(NUM_MAP_LOCATIONS*sizeof(LocationID));
+    LocationID *locations = malloc(NUM_MAP_LOCATIONS*sizeof(LocationID));
     int numLoc = adjacentLocations((int)from, -1, (int)player, (int)round, road, rail, sea, locations, -1);
     int i,e;
     int found;
