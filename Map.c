@@ -37,21 +37,19 @@ int adjacentLocations(int from, int prevLoc, int playerID, int round, int road, 
     // find avaliable locations
     VList n = g->connections[from];
     while (n != NULL) {
-         if((sea && n->type == SEA) || (road && n->type == ROAD)){
+         if((sea && n->type == BOAT) || (road && n->type == ROAD)){
            locArray[numPath] = n->v;
            numPath++; 
-            printf("%s by %d ,",idToName(n->v),n->type);
          }
-         if((rail && n->type == RAIL) && depth != 0 && prevLoc != n->v){
+         else if((rail && n->type == RAIL) && depth != 0 && prevLoc != n->v){
            locArray[numPath] = n->v;
            numPath++; 
-           printf("choo choo %s\n",idToName(n->v));
-           numPath += adjacentLocations(n->v, from, playerID, round, road, rail, sea, locArray, depth);
+           // recersivlly go to next station
+           numPath += adjacentLocations(n->v, from, playerID, round, 0, rail, 0, locArray, depth);
          }
         n = n->next;
     }
     
-    printf("\n\n");
     
     return numPath;
 }

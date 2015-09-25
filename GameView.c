@@ -306,16 +306,20 @@ LocationID *connectedLocations(GameView currentView, int *numLocations,
                                LocationID from, PlayerID player, Round round,
                                int road, int rail, int sea)
 {
-    LocationID *locations = malloc(NUM_MAP_LOCATIONS*sizeof(LocationID));
+    int locations[MAX_CONNECTIONS] = {0};
     int numLoc = adjacentLocations((int)from, -1, (int)player, (int)round, road, rail, sea, locations, -1);
+    
     int i,e;
     int found;
-    LocationID conectedLocs[numLoc];
-    // remove duplicates and backtracks for drac
+    LocationID *conectedLocs = malloc(NUM_MAP_LOCATIONS*sizeof(LocationID));
+    conectedLocs[0] = from; 
+    *numLocations=1;
+    
+    //remove duplicates
     for(i=0; i<numLoc; i++){
       found = 0;
       for(e=0; e<*numLocations && !found; e++){
-         if(locations[i] == conectedLocs[e])
+         if(locations[i] == (int)conectedLocs[e])
             found = 1;
        }
        if(!found){
@@ -325,8 +329,7 @@ LocationID *connectedLocations(GameView currentView, int *numLocations,
     }
       
     numLoc = conectedLocs[0]; //keep comiler happy
-    numLoc = locations[0];
+    numLoc = locations[0];    //keep comiler happy
     
-    //return conectedLocs; 
-    return NULL; //keep comiler happy
+    return conectedLocs; 
 }
