@@ -11,6 +11,7 @@
      
 #define NUM_HUNTERS 4
 #define MAX_CONNECTIONS 100
+#define SIZE_OF_PLAYS 7
 
 struct gameView {
     Map europe;
@@ -30,15 +31,12 @@ static LocationID handleDoubleBack(GameView gameView, PlayerID currPlayer, Locat
 //adds the last seen location to the start of the array and pushes the rest along
 static void addToTrail(GameView currentView, PlayerID currPlayerID, LocationID currLocation)
 {
-   //printf("in addToTrail\n");
     int count = TRAIL_SIZE-1;
-    //int i = 0;
     while (count > 0){
         currentView->trail[currPlayerID][count] = currentView->trail[currPlayerID][count-1];
         count--;
     }
     currentView->trail[currPlayerID][0] = currLocation;
-    //printf("added %d to trail\n", currLocation);
 }
 
 //converts first letter of pastplays to its corresponding playerID
@@ -94,10 +92,6 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     //initializing gameView variables
     GameView gameView = malloc(sizeof(struct gameView));
     gameView->europe = newMap();
-    //gameView->numTurns = (((int)strlen(pastPlays)+1)%40)/5;
-    //how many turns the players has made, in case someone needs to use this else delete it <- WTF
-    //was going to use it for trails but kept it in case someone may need it
-    //gameView->numIndTurns[NUM_PLAYERS] = {0};
     gameView->score = GAME_START_SCORE;
     gameView->pastPlays = pastPlays;
     int i = 0;
@@ -116,15 +110,11 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
         i++;
     }
     gameView->hp[PLAYER_DRACULA] = GAME_START_BLOOD_POINTS;
-    printf("dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
 
-    //adjust to current state
-    //here we want to analyse pastPlays string and adjust 
-    //the values as we read information from the string
+    //adjusts the data to current state
     if(pastPlays == NULL){
         return gameView;
     }
-    //the following can probably be cleaned up
     int count = 3;
     int count2 = 0;
     int curr = 0;
@@ -133,36 +123,31 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
     char currPlayer[1];
     char currLocation[3] = {'\0'};
     int pastPlaySize = strlen(pastPlays);
-    printf("pastPlaySize is %d\n", pastPlaySize);
     while (curr < pastPlaySize){
         //prints messages just for fun
         printf("%s\n",messages[count2]);
         //the following gets the current player and adds locations to their respective trail array
-        //int numTurns = gameView->numRounds; //this is not correct
         count = 3;
         currPlayer[0] = pastPlays[curr];
         currPlayerID = letterToPlayerID(*currPlayer);
+        //adjusts round number
         if (currPlayerID == PLAYER_LORD_GODALMING){
             gameView->numRounds++;
         }
-        //gameView->numIndTurns[currPlayerID]++;
         currLocation[0] = pastPlays[curr+1];
         currLocation[1] = pastPlays[curr+2];
-        //printf("loc is %s\n",currLocation);
         location = abbrevToID(currLocation);
-        //printf("location is %d\n",location);
         addToTrail(gameView,currPlayerID,location);
         //clean this if i havent done so before its due
 
         //the following reads the characters after the first 3 to adjust the scores/hp
         if (currPlayerID != PLAYER_DRACULA){
-            while (count < 7){
+            while (count < SIZE_OF_PLAYS){
                 if (gameView->hp[currPlayerID] < 0){
                     //player died and was sent to hospital (locationID 59)(ST_JOSEPH_AND_ST_MARYS)
                     gameView->score -= SCORE_LOSS_HUNTER_HOSPITAL;
                     gameView->hp[currPlayerID] = 9;
-                    //not sure if we stop checking for damage after being sent to hospital
-                    //hunter died
+                    //give the hunter a rest and dont apply more damage
                     break;
                 }
                 if (pastPlays[curr+count] == 'T'){
@@ -172,13 +157,13 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
                     //apply consequences for encountering dracula
                     gameView->hp[currPlayerID] -= LIFE_LOSS_DRACULA_ENCOUNTER;
                     gameView->hp[PLAYER_DRACULA] -= LIFE_LOSS_HUNTER_ENCOUNTER;
-                    //printf("hunter--dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
                 }else{
                     count = 7;
                     continue;
                 }
                 count++;
             }
+        //Dracula's turn
         }else{
             gameView->score -= SCORE_LOSS_DRACULA_TURN;
             //only this case changes the score or hp
@@ -188,7 +173,7 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
             }
         }
 
-        //adjust score according to trails
+        //adjust score and hp according to trails
         if (currPlayerID != PLAYER_DRACULA){
             if (gameView->numRounds > 1){
                 //check if hunter rested
@@ -200,17 +185,17 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
             }
         }else{
             int index = 0;
-            //printf("location is %d",location);
+            //check for doublebacks
             if (location >= HIDE && location <= DOUBLE_BACK_5){
-               printf("found a double back!\n");
                     location = handleDoubleBack(gameView, currPlayerID, location, &index);
-                    printf("location is %d\n",location);
+                //if it was a hide or double backed into a hide
                 if (location == HIDE){location = gameView->trail[currPlayerID][index+1];}
             }
+            //if exact location is known check if its a sea
             if (location <= MAX_MAP_LOCATION){
                 if (isSea(location)){
                     gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
-                    //printf("sea--dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
+                //if dracula hid into a double back
                 }else if (location >= DOUBLE_BACK_1 && location <= DOUBLE_BACK_5){
                     location = handleDoubleBack(gameView, currPlayerID, location, &index);
                     if (location <= MAX_MAP_LOCATION){
@@ -220,13 +205,12 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
                     }
                 }
             }
+            //check for Castle dracula or teleporting to it after hide and double backs were tracked down
             if (location == CASTLE_DRACULA || location == TELEPORT){
-                gameView->hp[currPlayerID] += LIFE_GAIN_CASTLE_DRACULA;
+                 gameView->hp[currPlayerID] += LIFE_GAIN_CASTLE_DRACULA;
+            //decrease dracula's hp if he is at an unknown sea
             }else if (location == SEA_UNKNOWN){
-               //printf("location is %d\n",location);
-                gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
-                printf("sea unknown\n");
-                 printf("sea--dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
+                 gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
             }
         }
         count2++;
@@ -250,7 +234,6 @@ void disposeGameView(GameView toBeDeleted)
 // Get the current round
 Round getRound(GameView currentView)
 {
-    //printf("%s\n",currentView->pastPlays);
     currentView->numRounds = (((int)strlen(currentView->pastPlays)+1) / 40);
     return currentView->numRounds;
 }
@@ -258,9 +241,8 @@ Round getRound(GameView currentView)
 // Get the id of current player - ie whose turn is it?
 PlayerID getCurrentPlayer(GameView currentView)
 {
-    printf("player:%d\n",(int)strlen(currentView->pastPlays));
+    //printf("player:%d\n",(int)strlen(currentView->pastPlays));
     return (((int)strlen(currentView->pastPlays)+1)%40)/5;
-    //return ((currentView->numRounds-1)%5);
 }
 
 // Get the current score
