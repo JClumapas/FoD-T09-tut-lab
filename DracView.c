@@ -15,23 +15,23 @@ struct dracView {
     GameView g;
     int numTraps[NUM_MAP_LOCATION];
     int numImVampires[NUM_MAP_LOCATION];
-    int hello;
 };
      
 
 // Creates a new DracView to summarise the current state of the game
 DracView newDracView(char *pastPlays, PlayerMessage messages[])
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
+    //initialising values of the struct
     DracView dracView = malloc(sizeof(struct dracView));
     dracView->g = newGameView(pastPlays, messages);
-    dracView->hello = 42;
     int i = 0;
     while (i < NUM_MAP_LOCATION){
         dracView->numTraps[i] = 0;
         dracView->numImVampires[i] = 0;
         i++;
     }
+    //traverses through dracula's actions and adds counters for traps and vampires
+    //in the location where he placed them
     int curr = 32;
     LocationID location = 0;
     char currLocation[3] = {'\0'};
@@ -55,7 +55,6 @@ DracView newDracView(char *pastPlays, PlayerMessage messages[])
 // Frees all memory previously allocated for the DracView toBeDeleted
 void disposeDracView(DracView toBeDeleted)
 {
-    //COMPLETE THIS IMPLEMENTATION
     disposeGameView(toBeDeleted->g);
     free( toBeDeleted );
 }
