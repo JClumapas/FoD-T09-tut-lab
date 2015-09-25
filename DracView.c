@@ -157,8 +157,7 @@ LocationID *whereCanIgo(DracView currentView, int *numLocations, int road, int s
 LocationID *whereCanTheyGo(DracView currentView, int *numLocations,
                            PlayerID player, int road, int rail, int sea)
 {
-    {
-   LocationID *where = NULL;
+    LocationID *where = NULL;
     int currentRound;
     LocationID currentLocation = 0;
     if (player == PLAYER_DRACULA) {
