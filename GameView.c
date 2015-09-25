@@ -25,6 +25,7 @@ struct gameView {
 //not sure if they still need to be declared when they are defined before used
 static void addToTrail(GameView currentView, PlayerID currPlayerID, LocationID currLocation);
 static PlayerID letterToPlayerID(char l);
+static locationID handleDoubleBack(GameView gameView, locationID loc);
      
 //adds the last seen location to the start of the array and pushes the rest along
 static void addToTrail(GameView currentView, PlayerID currPlayerID, LocationID currLocation)
@@ -54,6 +55,34 @@ static PlayerID letterToPlayerID(char l)
         curr = PLAYER_DRACULA;
     }
     return curr;
+}
+
+static locationID handleDoubleBack(GameView gameView, locationID loc){
+    locationID location = loc;
+    switch (location){
+        case DOUBLE_BACK_1:
+        location = gameView->trail[currPlayerID][1];
+        index = 1;
+        break;
+        case DOUBLE_BACK_2:
+        location = gameView->trail[currPlayerID][2];
+        index = 2;
+        break;
+        case DOUBLE_BACK_3:
+        location = gameView->trail[currPlayerID][3];
+        index = 3;
+        break;
+        case DOUBLE_BACK_4:
+        location = gameView->trail[currPlayerID][4];
+        index = 4;
+        break;
+        case DOUBLE_BACK_5:
+        location = gameView->trail[currPlayerID][5];
+        index = 5;
+        break;
+        default:
+        break;
+    return location;
 }
 
 // Creates a new GameView to summarise the current state of the game
@@ -169,35 +198,15 @@ GameView newGameView(char *pastPlays, PlayerMessage messages[])
             int index = 0;
             //printf("location is %d",location);
             if (location >= HIDE && location <= DOUBLE_BACK_5){
-                switch (location){
-                    case DOUBLE_BACK_1:
-                    location = gameView->trail[currPlayerID][1];
-                    index = 1;
-                    break;
-                    case DOUBLE_BACK_2:
-                    location = gameView->trail[currPlayerID][2];
-                    index = 2;
-                    break;
-                    case DOUBLE_BACK_3:
-                    location = gameView->trail[currPlayerID][3];
-                    index = 3;
-                    break;
-                    case DOUBLE_BACK_4:
-                    location = gameView->trail[currPlayerID][4];
-                    index = 4;
-                    break;
-                    case DOUBLE_BACK_5:
-                    location = gameView->trail[currPlayerID][5];
-                    index = 5;
-                    break;
-                    default:
-                    break;
+                    location = handleDoubleBack(gameView, location);
                 }
                 if (location == HIDE){location = gameView->trail[currPlayerID][index+1];}
             }else if (location <= MAX_MAP_LOCATION){
                 if (isSea(location)){
                     gameView->hp[currPlayerID] -= LIFE_LOSS_SEA;
                     //printf("sea--dracula has %d hp\n", gameView->hp[PLAYER_DRACULA]);
+                }else if (location >= DOUBLE_BACK_1 && location <= DOUBLE_BACK_5){
+                    location = handleDoubleBack(gameView, location);
                 }
             }
             if (location == CASTLE_DRACULA || location == TELEPORT){
