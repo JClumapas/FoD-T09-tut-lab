@@ -50,7 +50,7 @@ int adjacentLocations(int from, int prevLoc, int playerID, int round, int road, 
         n = n->next;
     }
     
-    
+    free(g);
     return numPath;
 }
 
