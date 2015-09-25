@@ -58,7 +58,7 @@ static PlayerID letterToPlayerID(char l)
 }
 
 static LocationID handleDoubleBack(GameView gameView, LocationID loc){
-    locationID location = loc;
+    LocationID location = loc;
     switch (location){
         case DOUBLE_BACK_1:
         location = gameView->trail[currPlayerID][1];
