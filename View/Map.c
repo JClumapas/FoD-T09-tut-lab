@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include "Map.h"
 #include "Places.h"
+#include "Globals.h"
 
 typedef struct vNode *VList;
 
@@ -23,6 +24,33 @@ struct MapRep {
 };
 
 static void addConnections(Map);
+
+int adjacentLocations(Map g, int from, int prevLoc, int playerID, int round, int road, int rail, int sea, 
+   int *locArray, int depth){
+    
+    int numPath = 0;//number of paths
+    if(depth == -1)
+      depth = (playerID+round)%4;
+    assert(g != NULL);
+    
+    // find avaliable locations
+    VList n = g->connections[from];
+    while (n != NULL) {
+         if((sea && n->type == BOAT) || (road && n->type == ROAD)){
+           locArray[numPath] = n->v;
+           numPath++; 
+         }
+         else if((rail && n->type == RAIL) && depth != 0 && prevLoc != n->v){
+           locArray[numPath] = n->v;
+           numPath++; 
+           // recersivlly go to next station
+           numPath += adjacentLocations(g, n->v, from, playerID, round, 0, rail, 0, locArray, depth);
+         }
+        n = n->next;
+    }
+    
+    return numPath;
+}
 
 // Create a new empty graph (for a map)
 // #Vertices always same as NUM_PLACES
