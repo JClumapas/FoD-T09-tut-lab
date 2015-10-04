@@ -123,34 +123,12 @@ void giveMeTheTrail(DracView currentView, PlayerID player,
 // What are my (Dracula's) possible next moves (locations)
 LocationID *whereCanIgo(DracView currentView, int *numLocations, int road, int sea)
 {
-    /*assert(g != NULL);
-    int numPath = 0; //number of paths
-    int seaID = -1;
-    int start = whereIs(currentView, DRAC)
-
-    VList n = g->connections[start];
-    while (n != NULL) {
-        if(idToType(n->v) == SEA)
-            seaID = n->v;
-        if(n->v == end){
-            if((sea && n->type == SEA) || (road && n->type == ROAD))
-               type[i] = n->type; 
-            numPath++; 
-        }
-        n = n->next;
-      }
-
-    if(seaID != -1 && sea){
-         n = g->connections[end];
-         while( n != NULL){
-             if(n->v == seaID){
-                 type[i] = BOAT;
-                 numPath++;            
-             }
-             n = n->next;
-         }
-    }*/
-    return NULL;
+    LocationID *paths;
+    PlayerID player = whoAmI(currentView);
+    LocationID now = whereIs(currentView,player);
+    Round current = giveMeTheRound(currentView);
+    paths = connectedLocations(currentView->view,numLocations,now,player,current,road,0,sea);
+    return paths;
 }
 
 // What are the specified player's next possible moves
