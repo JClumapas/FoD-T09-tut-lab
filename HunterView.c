@@ -86,22 +86,47 @@ void giveMeTheTrail(HunterView currentView, PlayerID player,
 // What are my possible next moves (locations)
 LocationID *whereCanIgo(HunterView currentView, int *numLocations, int road, int rail, int sea)
 {
-    LocationID *paths;
-    PlayerID player = whoAmI(currentView);
-    LocationID now = whereIs(currentView,player);
-    Round current = giveMeTheRound(currentView);
-    paths = connectedLocations(currentView->view,numLocations,now,player,current,road,rail,sea);
-    return paths;
+    return whereCanTheyGo(currentView,
+                               numLocations,
+                               getCurrentPlayer(currentView->game),
+                               road, rail, sea);
 }
 
 // What are the specified player's next possible moves
 LocationID *whereCanTheyGo(HunterView currentView, int *numLocations,
                            PlayerID player, int road, int rail, int sea)
 {
-    LocationID *paths;
-    LocationID now = whereIs(currentView,player);
-    Round current = giveMeTheRound(currentView);
-    paths = connectedLocations(currentView->view,numLocations,now,player,current,road,rail,sea);
-    //INCOMPLETE
-    return paths;
+    int i, numValidLocations, index;
+    LocationID forbidden;
+    LocationID *validLocations;
+
+    LocationID *locations = connectedLocations(currentView->game,
+                               numLocations,
+                               getLocation(currentView->game, player),
+                               player,
+                               getRound(currentView->game),
+                               road, rail, sea);
+    if(player == PLAYER_DRACULA){
+        forbidden = ST_JOSEPH_AND_ST_MARYS;
+    }
+
+    numValidLocations = 0;
+    for(i = 0; i < (*numLocations); i++){
+        if(locations[i] != forbidden){
+            numValidLocations++;
+        }
+    }
+
+    index = 0;
+    validLocations = malloc(sizeof(LocationID) * numValidLocations);
+    for(i = 0; i < numValidLocations; i++){
+        if(locations[i] != forbidden){
+            validLocations[index] = locations[i];
+            index++;
+        }
+    }
+
+    free(locations);
+    *numLocations = numValidLocations;
+    return validLocations;
 }
