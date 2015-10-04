@@ -123,30 +123,47 @@ void giveMeTheTrail(DracView currentView, PlayerID player,
 // What are my (Dracula's) possible next moves (locations)
 LocationID *whereCanIgo(DracView currentView, int *numLocations, int road, int sea)
 {
-    LocationID *paths;
-    PlayerID player = whoAmI(currentView);
-    LocationID now = whereIs(currentView,player);
-    Round current = giveMeTheRound(currentView);
-    paths = connectedLocations(currentView->view,numLocations,now,player,current,road,0,sea);
-    return paths;
+    return whereCanTheyGo(currentView,
+                               numLocations,
+                               getCurrentPlayer(currentView->game),
+                               road, FALSE, sea);
 }
 
 // What are the specified player's next possible moves
 LocationID *whereCanTheyGo(DracView currentView, int *numLocations,
                            PlayerID player, int road, int rail, int sea)
 {
-    LocationID *where = NULL;
-    int currentRound;
-    LocationID currentLocation = 0;
-    if (player == PLAYER_DRACULA) {
-        where = whereCanIgo(currentView,numLocations, road,sea);
-    } else {
-        currentLocation = whereIs(currentView, player);
-        currentRound = giveMeTheRound(currentView);
-        where = connectedLocations(currentView->g, numLocations,
-                            currentLocation, player, currentRound,
-                                     road, rail, sea);
+    int i, numValidLocations, index;
+    LocationID forbidden;
+    LocationID *validLocations;
+
+    LocationID *locations = connectedLocations(currentView->game,
+                               numLocations,
+                               getLocation(currentView->game, player),
+                               player,
+                               getRound(currentView->game),
+                               road, rail, sea);
+    if(player == PLAYER_DRACULA){
+        forbidden = ST_JOSEPH_AND_ST_MARYS;
     }
 
-    return where;
+    numValidLocations = 0;
+    for(i = 0; i < (*numLocations); i++){
+        if(locations[i] != forbidden){
+            numValidLocations++;
+        }
+    }
+
+    index = 0;
+    validLocations = malloc(sizeof(LocationID) * numValidLocations);
+    for(i = 0; i < numValidLocations; i++){
+        if(locations[i] != forbidden){
+            validLocations[index] = locations[i];
+            index++;
+        }
+    }
+
+    free(locations);
+    *numLocations = numValidLocations;
+    return validLocations;
 }
