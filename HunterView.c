@@ -6,20 +6,27 @@
 #include "Game.h"
 #include "GameView.h"
 #include "HunterView.h"
+#include <string.h>
 // #include "Map.h" ... if you decide to use the Map ADT
      
 struct hunterView {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    int hello;
+    GameView view;
+    PlayerMessage *messages;
 };
-     
 
 // Creates a new HunterView to summarise the current state of the game
 HunterView newHunterView(char *pastPlays, PlayerMessage messages[])
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
     HunterView hunterView = malloc(sizeof(struct hunterView));
-    hunterView->hello = 42;
+    assert(hunterView!=NULL);
+    hunterView->view = newGameView(pastPlays,messages);
+
+    int rounds = giveMeTheRound(hunterView);
+    hunterView->messages = malloc(sizeof(PlayerMessage)*rounds);
+    int i;
+    for (i=0;i<rounds;i++) {
+        strncpy(hunterView->messages[i], messages[i], MESSAGE_SIZE);
+    }
     return hunterView;
 }
      
@@ -27,46 +34,42 @@ HunterView newHunterView(char *pastPlays, PlayerMessage messages[])
 // Frees all memory previously allocated for the HunterView toBeDeleted
 void disposeHunterView(HunterView toBeDeleted)
 {
-    //COMPLETE THIS IMPLEMENTATION
-    free( toBeDeleted );
+    disposeGameView(toBeDeleted->view);
+    free(toBeDeleted->messages);
+    free(toBeDeleted);
 }
 
 
 //// Functions to return simple information about the current state of the game
 
 // Get the current round
-Round giveMeTheRound(HunterView currentView)
+int giveMeTheRound(HunterView currentView)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    return 0;
+    return getRound(currentView->view);
 }
 
 // Get the id of current player
 PlayerID whoAmI(HunterView currentView)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    return 0;
+    return getCurrentPlayer(currentView->view);
 }
 
 // Get the current score
 int giveMeTheScore(HunterView currentView)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    return 0;
+    return getScore(currentView->view);
 }
 
 // Get the current health points for a given player
 int howHealthyIs(HunterView currentView, PlayerID player)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    return 0;
+    return getHealth(currentView->view, player);
 }
 
 // Get the current location id of a given player
 LocationID whereIs(HunterView currentView, PlayerID player)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    return 0;
+    return getLocation(currentView->view, player);
 }
 
 //// Functions that return information about the history of the game
@@ -75,23 +78,30 @@ LocationID whereIs(HunterView currentView, PlayerID player)
 void giveMeTheTrail(HunterView currentView, PlayerID player,
                             LocationID trail[TRAIL_SIZE])
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
+    return getHistory(currentView->view, player, trail);
 }
 
 //// Functions that query the map to find information about connectivity
 
 // What are my possible next moves (locations)
-LocationID *whereCanIgo(HunterView currentView, int *numLocations,
-                        int road, int rail, int sea)
+LocationID *whereCanIgo(HunterView currentView, int *numLocations, int road, int rail, int sea)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    return NULL;
+    LocationID *paths;
+    PlayerID player = whoAmI(currentView);
+    LocationID now = whereIs(currentView,player);
+    Round current = giveMeTheRound(currentView);
+    paths = connectedLocations(currentView->view,numLocations,now,player,current,road,rail,sea);
+    return paths;
 }
 
 // What are the specified player's next possible moves
 LocationID *whereCanTheyGo(HunterView currentView, int *numLocations,
                            PlayerID player, int road, int rail, int sea)
 {
-    //REPLACE THIS WITH YOUR OWN IMPLEMENTATION
-    return NULL;
+    LocationID *paths;
+    LocationID now = whereIs(currentView,player);
+    Round current = giveMeTheRound(currentView);
+    paths = connectedLocations(currentView->view,numLocations,now,player,current,road,rail,sea);
+    //INCOMPLETE
+    return paths;
 }
