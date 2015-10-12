@@ -16,11 +16,12 @@ void decideDraculaMove(DracView gameState)
 	registerBestPlay("TP","Teleporting");
 	//add possible moves
 	int numLocs;
-	LocationID *moves = whereCanIgo(gameState,*numLocs,TRUE,TRUE);
+	LocationID *moves = whereCanIgo(gameState,&numLocs,TRUE,TRUE);
 	LocationID bestMove = moves[0];
 	//check for legality, if times out, then teleport
+	int r;
 	while (LegalMove(gameState,bestMove)==0){
-		int r = (rand()%(numLocs));
+		r = (rand()%(numLocs));
 		bestMove=moves[r];
 		r++;
 	}
@@ -57,8 +58,8 @@ int LegalMove(DracView gameState, LocationID move){
 	LocationID trail[TRAIL_SIZE];
 	giveMeTheTrail(gameState,PLAYER_DRACULA,trail);
 	int i;
-	for(i=0;i<TRAIL_SIZE;i++;){
-		if(strcmp(&move,&trail[i])==0){
+	for(i=0;i<TRAIL_SIZE;i++){
+		if(move == trail[i]){
 			if(i==0){
 				if (hideInTrail(gameState, trail)==1){
 					return 0;
