@@ -54,7 +54,7 @@ void decideDraculaMove(DracView gameState)
 	
 }
 
-int LegalMove(DracView gameState, LocationID move){
+static int LegalMove(DracView gameState, LocationID move){
 	LocationID trail[TRAIL_SIZE];
 	giveMeTheTrail(gameState,PLAYER_DRACULA,trail);
 	int i;
@@ -72,6 +72,7 @@ int LegalMove(DracView gameState, LocationID move){
 				return (i+2);
 			}
 		}
-		return 1;
+		//return 1;
 	}
+	return 1;
 }
