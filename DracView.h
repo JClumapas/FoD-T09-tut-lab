@@ -131,4 +131,7 @@ LocationID *whereCanIgo(DracView currentView, int *numLocations, int road, int s
 LocationID *whereCanTheyGo(DracView currentView, int *numLocations,
                            PlayerID player, int road, int rail, int sea);
 
+int doubleBackInTrail(DracView g, LocationID *trail);
+int hideInTrail(DracView g, LocationID *trail);
+
 #endif
