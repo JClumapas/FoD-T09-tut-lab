@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "Game.h"
 #include "DracView.h"
-#include "places.h"
+#include "Places.h"
 
 
 void decideDraculaMove(DracView gameState)
