@@ -112,6 +112,7 @@ LocationID *whereCanIgo(HunterView currentView, int *numLocations,
 
 LocationID *whereCanTheyGo(HunterView currentView, int *numLocations,
                            PlayerID player, int road, int rail, int sea);
+int findPath(DracView d, Vertex src, Vertex dest, int *path, int road, int rail, int sea);
 
 
 #endif
