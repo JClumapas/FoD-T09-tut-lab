@@ -3,10 +3,12 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "Game.h"
 #include "DracView.h"
 #include "Places.h"
 
+static int LegalMove(DracView gameState, LocationID move);
 
 void decideDraculaMove(DracView gameState)
 {	
@@ -14,7 +16,7 @@ void decideDraculaMove(DracView gameState)
 	registerBestPlay("TP","Teleporting");
 	//add possible moves
 	int numLocs;
-	LocationID *moves = whereCanIGo(gameState,*numLocs,TRUE,TRUE);
+	LocationID *moves = whereCanIgo(gameState,*numLocs,TRUE,TRUE);
 	LocationID bestMove = moves[0];
 	//check for legality, if times out, then teleport
 	while (LegalMove(gameState,bestMove)==0){
@@ -54,7 +56,8 @@ void decideDraculaMove(DracView gameState)
 int LegalMove(DracView gameState, LocationID move){
 	LocationID trail[TRAIL_SIZE];
 	giveMeTheTrail(gameState,PLAYER_DRACULA,trail);
-	for(i=0,i<TRAIL_SIZE,i++){
+	int i;
+	for(i=0;i<TRAIL_SIZE;i++;){
 		if(strcmp(&move,&trail[i])==0){
 			if(i==0){
 				if (hideInTrail(gameState, trail)==1){
