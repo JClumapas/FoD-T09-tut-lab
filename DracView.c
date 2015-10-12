@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "GameView.h"
 #include "DracView.h"
+#include "Places.h"
 #include "Map.h" //... if you decide to use the Map ADT
 
 #define NUM_MAP_LOCATION 100
@@ -167,3 +168,27 @@ LocationID *whereCanTheyGo(DracView currentView, int *numLocations,
     *numLocations = numValidLocations;
     return validLocations;
 }
+
+int doubleBackInTrail(DracView g, LocationID *trail){
+    for(i=0,i<TRAIL_SIZE,i++){
+        if (trail[i]==DOUBLE_BACK_1||
+            trail[i]==DOUBLE_BACK_2||
+            trail[i]==DOUBLE_BACK_3||
+            trail[i]==DOUBLE_BACK_4||
+            trail[i]==DOUBLE_BACK_5||){
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+int hideInTrail(DracView g, LocationID *trail){
+    for(i=0,i<TRAIL_SIZE,i++){
+        if (trail[i]==HIDE){
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+
