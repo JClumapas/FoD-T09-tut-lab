@@ -35,5 +35,5 @@ void decideHunterMove(HunterView gameState)
          registerBestPlay("KL","");
       }
    } 
-   registerBestPlay("GE","I'm on holiday in Geneva");
+   //registerBestPlay("GE","I'm on holiday in Geneva");
 }
