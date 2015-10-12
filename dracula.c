@@ -12,14 +12,11 @@ static int LegalMove(DracView gameState, LocationID move);
 
 void decideDraculaMove(DracView gameState)
 {	
-	printf ("hi\n");
-	//enter teleport move first
-	//if(LegalMove(gameState, CASTLE_DRACULA))
-		//registerBestPlay("TP","Teleporting");
+	registerBestPlay("TP","Teleporting");
 	//add possible moves
 	int numLocs, r;
 	LocationID *moves = whereCanIgo(gameState,&numLocs,TRUE,TRUE);
-	r = (rand()%(numLocs));
+	r = 0;
 	LocationID bestMove = moves[r];
 	//check for legality, if times out, then teleport
 	while (LegalMove(gameState,bestMove)==0){
