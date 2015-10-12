@@ -12,6 +12,7 @@ static int LegalMove(DracView gameState, LocationID move);
 
 void decideDraculaMove(DracView gameState)
 {	
+	printf ("hi\n");
 	//enter teleport move first
 	registerBestPlay("TP","Teleporting");
 	//add possible moves
