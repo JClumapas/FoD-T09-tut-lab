@@ -176,7 +176,7 @@ int doubleBackInTrail(DracView g, LocationID *trail){
             trail[i]==DOUBLE_BACK_2||
             trail[i]==DOUBLE_BACK_3||
             trail[i]==DOUBLE_BACK_4||
-            trail[i]==DOUBLE_BACK_5||){
+            trail[i]==DOUBLE_BACK_5){
             return TRUE;
         }
     }
