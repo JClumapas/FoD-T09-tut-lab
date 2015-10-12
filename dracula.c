@@ -14,8 +14,8 @@ void decideDraculaMove(DracView gameState)
 {	
 	printf ("hi\n");
 	//enter teleport move first
-	if(LegalMove(gameState, CASTLE_DRACULA))
-		registerBestPlay("TP","Teleporting");
+	//if(LegalMove(gameState, CASTLE_DRACULA))
+		//registerBestPlay("TP","Teleporting");
 	//add possible moves
 	int numLocs, r;
 	LocationID *moves = whereCanIgo(gameState,&numLocs,TRUE,TRUE);
@@ -38,19 +38,24 @@ void decideDraculaMove(DracView gameState)
 			break;
 		//double back
 		case 3:
-			registerBestPlay("D1","BBBBBBB");
+			if (giveMeTheRound(gameState) >= 1)
+				registerBestPlay("D1","BBBBBBB");
 			break;
 		case 4:
-			registerBestPlay("D2","BBBBBBB");
+			if (giveMeTheRound(gameState) >= 2)
+				registerBestPlay("D2","BBBBBBB");
 			break;
 		case 5:
-			registerBestPlay("D3","BBBBBBB");
+			if (giveMeTheRound(gameState) >= 3)
+				registerBestPlay("D3","BBBBBBB");
 			break;
 		case 6:
-			registerBestPlay("D4","BBBBBBB");
+			if (giveMeTheRound(gameState) >= 4)
+				registerBestPlay("D4","BBBBBBB");
 			break;
 		case 7:
-			registerBestPlay("D5","BBBBBBB");
+			if (giveMeTheRound(gameState) >= 5)
+				registerBestPlay("D5","BBBBBBB");
 			break;
 	}
 	
