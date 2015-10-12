@@ -126,7 +126,7 @@ LocationID *whereCanIgo(DracView currentView, int *numLocations, int road, int s
 {
     return whereCanTheyGo(currentView,
                                numLocations,
-                               getCurrentPlayer(currentView->game),
+                               getCurrentPlayer(currentView->g),
                                road, FALSE, sea);
 }
 
@@ -138,11 +138,11 @@ LocationID *whereCanTheyGo(DracView currentView, int *numLocations,
     LocationID forbidden;
     LocationID *validLocations;
 
-    LocationID *locations = connectedLocations(currentView->game,
+    LocationID *locations = connectedLocations(currentView->g,
                                numLocations,
-                               getLocation(currentView->game, player),
+                               getLocation(currentView->g, player),
                                player,
-                               getRound(currentView->game),
+                               getRound(currentView->g),
                                road, rail, sea);
     if(player == PLAYER_DRACULA){
         forbidden = ST_JOSEPH_AND_ST_MARYS;
@@ -170,7 +170,7 @@ LocationID *whereCanTheyGo(DracView currentView, int *numLocations,
 }
 
 int doubleBackInTrail(DracView g, LocationID *trail){
-    for(i=0,i<TRAIL_SIZE,i++){
+    for(i=0;i<TRAIL_SIZE;i++){
         if (trail[i]==DOUBLE_BACK_1||
             trail[i]==DOUBLE_BACK_2||
             trail[i]==DOUBLE_BACK_3||
@@ -183,7 +183,7 @@ int doubleBackInTrail(DracView g, LocationID *trail){
 }
 
 int hideInTrail(DracView g, LocationID *trail){
-    for(i=0,i<TRAIL_SIZE,i++){
+    for(i=0;i<TRAIL_SIZE;i++){
         if (trail[i]==HIDE){
             return TRUE;
         }
