@@ -153,3 +153,9 @@ int abbrevToID(char *abbrev)
    }
    return NOWHERE;
 }
+
+char *idToAbbrev(int place)
+{
+   assert (place>=MIN_MAP_LOCATION && place<=MAX_MAP_LOCATION);
+   return places[place].abbrev;
+}
