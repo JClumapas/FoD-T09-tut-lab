@@ -14,7 +14,8 @@ void decideDraculaMove(DracView gameState)
 {	
 	printf ("hi\n");
 	//enter teleport move first
-	registerBestPlay("TP","Teleporting");
+	if(LegalMove(gameState, CASTLE_DRACULA))
+		registerBestPlay("TP","Teleporting");
 	//add possible moves
 	int numLocs, r;
 	LocationID *moves = whereCanIgo(gameState,&numLocs,TRUE,TRUE);
