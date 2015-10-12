@@ -193,4 +193,81 @@ int hideInTrail(DracView g, LocationID *trail){
     return FALSE;
 }
 
+int findPath(DracView d, Vertex src, Vertex dest, int *path, int road, int sea)
+{
+	printf("finding path from %d to %d\n",src,dest);
+	if(src==dest) {
+		printf("nice try\n");
+		path[1] = dest;
+		return 1;
+	}
+	int tmp_city = src;
+	// Temporary store of path_distance for calculations
+	int tmp_distance = 0;
+	int path_distance = 0;
+
+	// Array of visited cities, if not visited 0, else 1
+	int visited[NUM_MAP_LOCATIONS] = {0};
+
+	// Stores index of the previous city, default value -1
+	int prev[NUM_MAP_LOCATIONS] = {[0 ... (NUM_MAP_LOCATIONS-1)] = -1};
+
+	Queue cityQ = newQueue();
+	QueueJoin(cityQ, src);
+
+	// While Queue is not empty and the tmp_city is not the destination city (e.g. when path to destination city from src is found)
+	while (QueueIsEmpty(cityQ) == 0 && tmp_city != dest) {
+		tmp_city = QueueLeave(cityQ);
+		
+		int num_locs;
+		int *locs = connectedLocations(d->view, &num_locs,tmp_city, PLAYER_DRACULA, giveMeTheRound(d),road,FALSE,sea);
+		
+		int i;
+		for (i=0;i<num_locs;i++) {
+			
+		
+			if (!visited[locs[i]]) {
+				QueueJoin(cityQ, locs[i]);
+				prev[locs[i]] = tmp_city;
+				visited[locs[i]] = 1;
+			}
+		}
+
+		if (tmp_city == dest) {
+			prev[locs[i]] = tmp_city;
+
+			// Calculating size of path
+			int index = locs[i];
+			while (index != src) {
+				index = prev[index];
+				path_distance++;
+			}
+		
+			// Building path array, storing destination first
+			tmp_distance = path_distance-1;
+			path[tmp_distance] = dest;
+			tmp_distance--;
+
+			// Storing rest of array
+			index = prev[dest];
+			while (tmp_distance >= 0) {
+				path[tmp_distance] = index;
+				index = prev[index];
+				tmp_distance--;
+			}
+			break;
+		}
+	}
+	
+	
+	printf("path->");
+	int j;
+	for(j=0;j<path_distance;j++) {
+		printf("%d->",path[j]);
+	}
+	printf("x\n");
+	
+	return path_distance;
+}
+
 
