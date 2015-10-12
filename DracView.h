@@ -133,5 +133,6 @@ LocationID *whereCanTheyGo(DracView currentView, int *numLocations,
 
 int doubleBackInTrail(DracView g, LocationID *trail);
 int hideInTrail(DracView g, LocationID *trail);
+int findPath(DracView d, Vertex src, Vertex dest, int *path, int road, int sea);
 
 #endif
