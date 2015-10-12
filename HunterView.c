@@ -10,7 +10,7 @@
 // #include "Map.h" ... if you decide to use the Map ADT
      
 struct hunterView {
-    GameView view;
+    GameView g;
     PlayerMessage *messages;
 };
 
@@ -19,7 +19,7 @@ HunterView newHunterView(char *pastPlays, PlayerMessage messages[])
 {
     HunterView hunterView = malloc(sizeof(struct hunterView));
     assert(hunterView!=NULL);
-    hunterView->view = newGameView(pastPlays,messages);
+    hunterView->g = newGameView(pastPlays,messages);
 
     int rounds = giveMeTheRound(hunterView);
     hunterView->messages = malloc(sizeof(PlayerMessage)*rounds);
@@ -34,7 +34,7 @@ HunterView newHunterView(char *pastPlays, PlayerMessage messages[])
 // Frees all memory previously allocated for the HunterView toBeDeleted
 void disposeHunterView(HunterView toBeDeleted)
 {
-    disposeGameView(toBeDeleted->view);
+    disposeGameView(toBeDeleted->g);
     free(toBeDeleted->messages);
     free(toBeDeleted);
 }
@@ -45,31 +45,31 @@ void disposeHunterView(HunterView toBeDeleted)
 // Get the current round
 int giveMeTheRound(HunterView currentView)
 {
-    return getRound(currentView->view);
+    return getRound(currentView->g);
 }
 
 // Get the id of current player
 PlayerID whoAmI(HunterView currentView)
 {
-    return getCurrentPlayer(currentView->view);
+    return getCurrentPlayer(currentView->g);
 }
 
 // Get the current score
 int giveMeTheScore(HunterView currentView)
 {
-    return getScore(currentView->view);
+    return getScore(currentView->g);
 }
 
 // Get the current health points for a given player
 int howHealthyIs(HunterView currentView, PlayerID player)
 {
-    return getHealth(currentView->view, player);
+    return getHealth(currentView->g, player);
 }
 
 // Get the current location id of a given player
 LocationID whereIs(HunterView currentView, PlayerID player)
 {
-    return getLocation(currentView->view, player);
+    return getLocation(currentView->g, player);
 }
 
 //// Functions that return information about the history of the game
@@ -78,7 +78,7 @@ LocationID whereIs(HunterView currentView, PlayerID player)
 void giveMeTheTrail(HunterView currentView, PlayerID player,
                             LocationID trail[TRAIL_SIZE])
 {
-    return getHistory(currentView->view, player, trail);
+    return getHistory(currentView->g, player, trail);
 }
 
 //// Functions that query the map to find information about connectivity
@@ -88,7 +88,7 @@ LocationID *whereCanIgo(HunterView currentView, int *numLocations, int road, int
 {
     return whereCanTheyGo(currentView,
                                numLocations,
-                               getCurrentPlayer(currentView->game),
+                               getCurrentPlayer(currentView->g),
                                road, rail, sea);
 }
 
@@ -100,11 +100,11 @@ LocationID *whereCanTheyGo(HunterView currentView, int *numLocations,
     LocationID forbidden;
     LocationID *validLocations;
 
-    LocationID *locations = connectedLocations(currentView->game,
+    LocationID *locations = connectedLocations(currentView->g,
                                numLocations,
-                               getLocation(currentView->game, player),
+                               getLocation(currentView->g, player),
                                player,
-                               getRound(currentView->game),
+                               getRound(currentView->g),
                                road, rail, sea);
     if(player == PLAYER_DRACULA){
         forbidden = ST_JOSEPH_AND_ST_MARYS;
