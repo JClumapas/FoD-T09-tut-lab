@@ -27,6 +27,7 @@ void decideDraculaMove(DracView gameState)
 		bestMove=moves[r];
 		r++;
 	}
+	printf("best move is %d\n", bestMove);
 	switch (LegalMove(gameState,bestMove)){
 		//standard move
 		case 1: 
