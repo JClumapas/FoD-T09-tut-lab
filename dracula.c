@@ -16,11 +16,11 @@ void decideDraculaMove(DracView gameState)
 	//enter teleport move first
 	registerBestPlay("TP","Teleporting");
 	//add possible moves
-	int numLocs;
+	int numLocs, r;
 	LocationID *moves = whereCanIgo(gameState,&numLocs,TRUE,TRUE);
-	LocationID bestMove = moves[0];
+	r = (rand()%(numLocs));
+	LocationID bestMove = moves[r];
 	//check for legality, if times out, then teleport
-	int r;
 	while (LegalMove(gameState,bestMove)==0){
 		r = (rand()%(numLocs));
 		bestMove=moves[r];
