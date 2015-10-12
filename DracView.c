@@ -170,6 +170,7 @@ LocationID *whereCanTheyGo(DracView currentView, int *numLocations,
 }
 
 int doubleBackInTrail(DracView g, LocationID *trail){
+    int i;
     for(i=0;i<TRAIL_SIZE;i++){
         if (trail[i]==DOUBLE_BACK_1||
             trail[i]==DOUBLE_BACK_2||
@@ -183,6 +184,7 @@ int doubleBackInTrail(DracView g, LocationID *trail){
 }
 
 int hideInTrail(DracView g, LocationID *trail){
+    int i;
     for(i=0;i<TRAIL_SIZE;i++){
         if (trail[i]==HIDE){
             return TRUE;
