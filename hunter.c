@@ -15,6 +15,7 @@ void decideHunterMove(HunterView gameState)
    giveMeTheTrail(gameState, whoAmI(gameState), trail);
    int dead = 0;
    int i;
+
    for(i=4; i<6; i++){
       if(trail[i] == nameToID("JM"))
          dead = i;

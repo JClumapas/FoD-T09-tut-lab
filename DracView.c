@@ -1,6 +1,7 @@
 // DracView.c ... DracView ADT implementation
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <assert.h>
 #include <string.h>
 #include "Globals.h"
@@ -221,7 +222,7 @@ int findPath(DracView d, LocationID src, LocationID dest, int *path, int road, i
 		tmp_city = QueueLeave(cityQ);
 		
 		int num_locs;
-		int *locs = connectedLocations(d->view, &num_locs,tmp_city, PLAYER_DRACULA, giveMeTheRound(d),road,FALSE,sea);
+		int *locs = connectedLocations(d->g, &num_locs,tmp_city, PLAYER_DRACULA, giveMeTheRound(d),road,FALSE,sea);
 		
 		int i;
 		for (i=0;i<num_locs;i++) {
