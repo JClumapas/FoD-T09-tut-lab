@@ -1,12 +1,14 @@
 // HunterView.c ... HunterView ADT implementation
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <assert.h>
 #include "Globals.h"
 #include "Game.h"
 #include "GameView.h"
 #include "HunterView.h"
 #include "Queue.h"
+#include "Queue.c"
 #include <string.h>
 // #include "Map.h" ... if you decide to use the Map ADT
      
@@ -160,7 +162,7 @@ int findPath(HunterView h, LocationID src, LocationID dest, int *path, int road,
 		tmp_city = QueueLeave(cityQ);
 		
 		int num_locs;
-		int *locs = connectedLocations(h->view, &num_locs,tmp_city, whoAmI(h), giveMeTheRound(h),road,rail,sea);
+		int *locs = connectedLocations(h->g, &num_locs,tmp_city, whoAmI(h), giveMeTheRound(h),road,rail,sea);
 		
 		int i;
 		for (i=0;i<num_locs;i++) {

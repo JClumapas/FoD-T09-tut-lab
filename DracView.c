@@ -10,6 +10,8 @@
 #include "DracView.h"
 #include "Places.h"
 #include "Queue.h"
+#include "Queue.c"
+
 #include "Map.h" //... if you decide to use the Map ADT
 
 #define NUM_MAP_LOCATION 100
