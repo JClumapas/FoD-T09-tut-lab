@@ -30,6 +30,7 @@ Map.o : Map.c Map.h Places.h
 GameView.o : GameView.c Globals.h GameView.h
 HunterView.o : HunterView.c Globals.h HunterView.h
 DracView.o : DracView.c Globals.h DracView.h
+Queue.o: Queue.c Queue.h Item.h
 # if you use other ADTs, add dependencies for them here
 
 clean :
