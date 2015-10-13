@@ -193,7 +193,7 @@ int hideInTrail(DracView g, LocationID *trail){
     return FALSE;
 }
 
-int findPath(DracView d, Vertex src, Vertex dest, int *path, int road, int sea)
+int findPath(DracView d, LocationID src, LocationID dest, int *path, int road, int sea)
 {
 	printf("finding path from %d to %d\n",src,dest);
 	if(src==dest) {
