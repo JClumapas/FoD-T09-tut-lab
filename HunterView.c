@@ -6,6 +6,7 @@
 #include "Game.h"
 #include "GameView.h"
 #include "HunterView.h"
+#include "Queue.h"
 #include <string.h>
 // #include "Map.h" ... if you decide to use the Map ADT
      
