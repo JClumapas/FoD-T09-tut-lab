@@ -8,6 +8,7 @@
 #include "GameView.h"
 #include "DracView.h"
 #include "Places.h"
+#include "Queue.h"
 #include "Map.h" //... if you decide to use the Map ADT
 
 #define NUM_MAP_LOCATION 100
