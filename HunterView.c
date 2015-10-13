@@ -132,7 +132,7 @@ LocationID *whereCanTheyGo(HunterView currentView, int *numLocations,
 }
 
 // find a path between two vertices using breadth-first traversal
-int findPath(HunterView h, Vertex src, Vertex dest, int *path, int road, int rail, int sea)
+int findPath(HunterView h, LocationID src, LocationID dest, int *path, int road, int rail, int sea)
 {
 	printf("finding path from %d to %d\n",src,dest);
 	if(src==dest) {
