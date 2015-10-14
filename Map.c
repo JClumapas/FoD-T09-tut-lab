@@ -27,12 +27,11 @@ static void addConnections(Map);
 
 int adjacentLocations(Map g, int from, int prevLoc, int playerID, int round, int road, int rail, int sea, 
    int *locArray, int depth){
-    
+    //fprintf(stderr, "depth:%d\n",depth);
     int numPath = 0;//number of paths
     if(depth == -1)
       depth = (playerID+round)%4;
     assert(g != NULL);
-    
     // find avaliable locations
     VList n = g->connections[from];
     while (n != NULL) {
@@ -44,11 +43,11 @@ int adjacentLocations(Map g, int from, int prevLoc, int playerID, int round, int
            locArray[numPath] = n->v;
            numPath++; 
            // recersivlly go to next station
-           numPath += adjacentLocations(g, n->v, from, playerID, round, 0, rail, 0, locArray, depth);
+           numPath += adjacentLocations(g, n->v, from, playerID, round, 0, rail, 0, locArray, depth-1);
          }
         n = n->next;
     }
-    
+    //fprintf(stderr, "level 8\n");
     return numPath;
 }
 
