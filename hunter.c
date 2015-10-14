@@ -50,12 +50,18 @@ void decideHunterMove(HunterView gameState)
             int *places; 
             char message[15];
             fprintf(stderr, "Level 1\n");
+            int i;
+            
             places = whereCanIgo(gameState, &numLocations, 1, 1, 0);
             fprintf(stderr, "Free\nnumLoc:%d\n", numLocations);
-            registerBestPlay(idToAbbrev(places[1]),message); 
+            for(i=0; i<numLocations; i++){
+                fprintf(stderr, "%s,",idToName(places[i]));
+            }
+            srand(time(NULL));
+            registerBestPlay(idToAbbrev(places[rand()%numLocations]),message); 
             //if(places[0])
             //    printf("a");
-            //sprintf(message, "%s", idToAbbrev(places[1]));
+            sprintf(message, "\n\n");
             //registerBestPlay("MU",""); 
         }
    }
