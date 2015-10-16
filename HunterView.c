@@ -102,6 +102,7 @@ LocationID *whereCanTheyGo(HunterView currentView, int *numLocations,
     int i, numValidLocations, index;
     LocationID forbidden;
     LocationID *validLocations;
+    fprintf(stderr,"From:%d\n",getLocation(currentView->g, player));
 
     LocationID *locations = connectedLocations(currentView->g,
                                numLocations,

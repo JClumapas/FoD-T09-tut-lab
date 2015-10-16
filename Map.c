@@ -27,20 +27,25 @@ static void addConnections(Map);
 
 int adjacentLocations(Map g, int from, int prevLoc, int playerID, int round, int road, int rail, int sea, 
    int *locArray, int depth){
-    fprintf(stderr, "depth:%d\n",depth);
     int numPath = 0;//number of paths
     if(depth == -1){
-      depth = (playerID+round)%4-1;
+      depth = (playerID+round)%4;
         if(depth<0){depth = 0;}
-        //fprintf(stderr, "%d\n",depth);
+        fprintf(stderr, "%d\n",depth);
+        fprintf(stderr,"from:%s\n",idToName(from));
+    }else{
+        int i;
+        for(i = 0; i<depth; i++){
+            fprintf(stderr,"\t");
+        }
     }
     assert(g != NULL);
+
     // find avaliable locations
     VList n = g->connections[from];
-    fprintf(stderr, ":1,");
     while (n != NULL) {
          if((sea && n->type == BOAT) || (road && n->type == ROAD)){
-            fprintf(stderr, "|");
+           fprintf(stderr, "%s,",idToName(n->v));
            locArray[numPath] = n->v;
            numPath++; 
          }
@@ -48,12 +53,13 @@ int adjacentLocations(Map g, int from, int prevLoc, int playerID, int round, int
            locArray[numPath] = n->v;
            numPath++; 
            // recersivlly go to next station
-           fprintf(stderr, "\n/t%s>",idToName(n->v));
+           fprintf(stderr, "\n\t%s>",idToName(n->v));
            numPath += adjacentLocations(g, n->v, from, playerID, round, 0, rail, 0, locArray, depth-1);
            fprintf(stderr, "<\n");
+         }else{
+            //fprintf(stderr,".");
          }
         n = n->next;
-        fprintf(stderr, ".");
     }
     //fprintf(stderr, "level 8\n");
     return numPath;

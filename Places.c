@@ -1,6 +1,7 @@
 // Places.c ... implementation of Places
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <assert.h>
 #include <string.h>
 #include "Places.h"
@@ -94,7 +95,9 @@ static Place places[] =
 // given a Place number, return its name
 char *idToName(LocationID p)
 {
-   assert(validPlace(p));
+   if(!validPlace(p)){
+        fprintf(stderr, "invalid Place:%d\n",p);
+    }
    return places[p].name;
 }
 

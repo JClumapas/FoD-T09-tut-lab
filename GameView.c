@@ -265,7 +265,7 @@ LocationID getLocation(GameView currentView, PlayerID player)
     if(read > (int)strlen(currentView->pastPlays)){
       read -= 40;
     }
-      
+    fprintf(stderr,"playerID:%c\tcharPlace = %d\n",currentView->pastPlays[read],read);
     //read = read - 39;
     if(read<0) // if no data
       return -1;
@@ -308,7 +308,7 @@ LocationID *connectedLocations(GameView currentView, int *numLocations,
 {
     int locations[MAX_CONNECTIONS] = {0};
     int numLoc = adjacentLocations(currentView->europe, (int)from, -1, (int)player, (int)round, road, rail, sea, locations, -1);
-    
+    printf("down\n");
     int i,e;
     int found;
     LocationID *conectedLocs = malloc(NUM_MAP_LOCATIONS*sizeof(LocationID));
@@ -326,10 +326,8 @@ LocationID *connectedLocations(GameView currentView, int *numLocations,
          conectedLocs[*numLocations] = locations[i];
          *numLocations+=1;
        }
-    }
-      
-    numLoc = conectedLocs[0]; //keep comiler happy
-    numLoc = locations[0];    //keep comiler happy
+    }  
     
+    fprintf(stderr, "level 5\n");
     return conectedLocs; 
 }

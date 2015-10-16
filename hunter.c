@@ -13,16 +13,19 @@ void decideHunterMove(HunterView gameState)
 {
    //printf("------------------------------------------");
    int playerID = whoAmI(gameState);
-   if(playerID == 0){
+   if(howHealthyIs(gameState,playerID)==0){
+        registerBestPlay("JM","Dead");
+   }else if(playerID == 0){
        int round = giveMeTheRound(gameState);
        LocationID trail[TRAIL_SIZE];
        giveMeTheTrail(gameState, whoAmI(gameState), trail);
        int dead = 0;
        int i;
 
-       for(i=4; i<6; i++){
+       for(i=0; i<3; i++){
           if(trail[i] == nameToID("JM"))
              dead = i;
+          fprintf(stderr, "Dead%d\n",dead);
        }
        
        if(dead){
@@ -32,12 +35,12 @@ void decideHunterMove(HunterView gameState)
              registerBestPlay("BC","Camping 2");
           }
        }else{
-          if(dead == 4){
-             registerBestPlay("SZ","Just dead");
-          }else if(dead == 5){
-             registerBestPlay("KL","Recovery 1");
-          }else{
+          if(dead == 0){
+             registerBestPlay("SZ","Recovery 1");
+          }else if(dead == 1){
              registerBestPlay("KL","Recovery 2");
+          }else{
+             registerBestPlay("KL","Recovery 3");
           }
        } 
    }else{
@@ -49,9 +52,8 @@ void decideHunterMove(HunterView gameState)
             int numLocations = 0;
             int *places; 
             char message[15];
-            fprintf(stderr, "Level 1\n");
             int i;
-            
+            fprintf(stderr,"From:%s\n",idToName(whereIs(gameState, playerID)));
             places = whereCanIgo(gameState, &numLocations, 1, 1, 0);
             fprintf(stderr, "Free\nnumLoc:%d\n", numLocations);
             for(i=0; i<numLocations; i++){
