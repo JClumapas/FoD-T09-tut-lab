@@ -89,6 +89,7 @@ void giveMeTheTrail(HunterView currentView, PlayerID player,
 // What are my possible next moves (locations)
 LocationID *whereCanIgo(HunterView currentView, int *numLocations, int road, int rail, int sea)
 {
+    fprintf(stderr,"damPlayer:%d\n",getCurrentPlayer(currentView->g));
     return whereCanTheyGo(currentView,
                                numLocations,
                                getCurrentPlayer(currentView->g),
@@ -102,7 +103,7 @@ LocationID *whereCanTheyGo(HunterView currentView, int *numLocations,
     int i, numValidLocations, index;
     LocationID forbidden;
     LocationID *validLocations;
-    fprintf(stderr,"From:%d\n",getLocation(currentView->g, player));
+    fprintf(stderr,"From:%d  , player:%d\n",getLocation(currentView->g, player),player);
 
     LocationID *locations = connectedLocations(currentView->g,
                                numLocations,

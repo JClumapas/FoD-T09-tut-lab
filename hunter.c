@@ -44,7 +44,7 @@ void decideHunterMove(HunterView gameState)
           }
        } 
    }else{
-        fprintf(stderr, "player 1-4\n");
+        fprintf(stderr, "\n\nHunters\n");
         srand((unsigned) time(NULL));
         if(giveMeTheRound(gameState) == 0){
             registerBestPlay("MU","Let the games Begin");
@@ -53,12 +53,14 @@ void decideHunterMove(HunterView gameState)
             int *places; 
             char message[15];
             int i;
-            fprintf(stderr,"From:%s\n",idToName(whereIs(gameState, playerID)));
+            fprintf(stderr,"huntFrom:%s\n",idToName(whereIs(gameState, playerID)));
+            fprintf(stderr, "\n\n\n");
             places = whereCanIgo(gameState, &numLocations, 1, 1, 0);
             fprintf(stderr, "Free\nnumLoc:%d\n", numLocations);
             for(i=0; i<numLocations; i++){
                 fprintf(stderr, "%s,",idToName(places[i]));
             }
+            
             srand(time(NULL));
             registerBestPlay(idToAbbrev(places[rand()%numLocations]),message); 
             //if(places[0])
@@ -66,6 +68,7 @@ void decideHunterMove(HunterView gameState)
             sprintf(message, "\n\n");
             //registerBestPlay("MU",""); 
         }
+        
    }
    //printf("\n\n\n\n");
    //egisterBestPlay("GE","I'm on holiday in Geneva");

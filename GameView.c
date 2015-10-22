@@ -241,8 +241,8 @@ Round getRound(GameView currentView)
 // Get the id of current player - ie whose turn is it?
 PlayerID getCurrentPlayer(GameView currentView)
 {
-    //printf("player:%d\n",(int)strlen(currentView->pastPlays));
-    return (((int)strlen(currentView->pastPlays)+1)%40)/5;
+    fprintf(stderr,"getPlayer:%d\n",(((int)strlen(currentView->pastPlays)+1)%40)/8);
+    return ((((int)strlen(currentView->pastPlays)+1)%40)/8);
 }
 
 // Get the current score
@@ -265,7 +265,7 @@ LocationID getLocation(GameView currentView, PlayerID player)
     if(read > (int)strlen(currentView->pastPlays)){
       read -= 40;
     }
-    fprintf(stderr,"playerID:%c\tcharPlace = %d\n",currentView->pastPlays[read],read);
+    
     //read = read - 39;
     if(read<0) // if no data
       return -1;
@@ -275,6 +275,7 @@ LocationID getLocation(GameView currentView, PlayerID player)
     abbrev[1] = currentView->pastPlays[read+2];
     //printf("%s\n
     int ID = abbrevToID(abbrev);
+    fprintf(stderr,"playerID:%c\tcharPlace = %d\tID:%s->%d\n",currentView->pastPlays[read],read,abbrev,ID);
     //printf("Loc:%s %d\n",abbrev,ID);
     if(ID != NOWHERE) // if this fails drac is in an unknown location
       return ID;
@@ -335,9 +336,11 @@ void getHistory(GameView currentView, PlayerID player,
 LocationID *connectedLocations(GameView currentView, int *numLocations,
         LocationID from, PlayerID player, Round round,
         int road, int rail, int sea) {
-
+    
+    fprintf(stderr,"Con->player:%d  from:%d   round:%d\n",player,from,round);
     assert(validPlace(from));
     assert(player >= PLAYER_LORD_GODALMING && player <= PLAYER_DRACULA);
+    
 
     Map europe = newMap();
 
