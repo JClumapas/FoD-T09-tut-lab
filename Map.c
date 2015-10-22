@@ -25,7 +25,7 @@ struct MapRep {
 
 static void addConnections(Map);
 
-int adjacentLocations(Map g, int from, int prevLoc, int playerID, int round, int road, int rail, int sea, 
+/* int adjacentLocations(Map g, int from, int prevLoc, int playerID, int round, int road, int rail, int sea, 
    int *locArray, int depth){
     int numPath = 0;//number of paths
     if(depth == -1){
@@ -63,6 +63,66 @@ int adjacentLocations(Map g, int from, int prevLoc, int playerID, int round, int
     }
     //fprintf(stderr, "level 8\n");
     return numPath;
+} */
+LocationID *reachableLocations(Map map, int *numLocations, LocationID from, int drac, int railLength, int road, int sea)
+{
+    //a boolean for each location, if it is reachable
+    int *reachable = malloc(NUM_MAP_LOCATIONS * sizeof (int));
+    int i;
+    for (i = 0; i < NUM_MAP_LOCATIONS; i++)
+        reachable[i] = 0;
+
+    //setting the 'from' location as reachable
+    reachable[from] = 1;
+
+    //for each connection that is by ROAD or SEA, set it to reachable
+    //if road or sea is set to true
+    VList cur;
+    TransportID type;
+    for (cur = map->connections[from]; cur != NULL; cur = cur->next) {
+        type = cur->type;
+        if ((type == ROAD && road) || (type == BOAT && sea)) {
+            reachable[cur->v] = 1;
+        }
+    }
+
+    //include the places reachable by rail
+    includeReachableByRail(map, reachable, from, railLength);
+
+    //going through and putting every reachable LocationID into an array
+    LocationID *locations = malloc(NUM_MAP_LOCATIONS * sizeof (LocationID));
+    int index = 0;
+    for (i = 0; i < NUM_MAP_LOCATIONS; i++) {
+        //don't allow dracula to go to the hospital
+        if (reachable[i]) {
+            if (!(drac && i == ST_JOSEPH_AND_ST_MARYS)) {
+                locations[index] = i;
+                index++;
+            }
+        }
+    }
+    free(reachable);
+
+    //setting the number of locations actually returned
+    *numLocations = index;
+
+    return locations;
+}
+
+static void includeReachableByRail(Map map, int *reachable, LocationID from, int railLength)
+{
+    assert(railLength >= 0);
+
+    reachable[from] = 1;
+
+    if (railLength > 0) {
+        VList cur;
+        for (cur = map->connections[from]; cur != NULL; cur = cur->next) {
+            if (cur->type == RAIL) {
+                includeReachableByRail(map, reachable, cur->v, railLength - 1);
+            }
+        }
+    }
 }
 
 // Create a new empty graph (for a map)
