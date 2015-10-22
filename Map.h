@@ -20,7 +20,8 @@ void disposeMap(Map g);
 void showMap(Map g); 
 int  numV(Map g);
 int  numE(Map g, TransportID t);
-int adjacentLocations(Map g, int from, int prevLoc, int playerID, int round, int road, int rail, int sea, 
-   int *locArray, int depth);
+/* int adjacentLocations(Map g, int from, int prevLoc, int playerID, int round, int road, int rail, int sea, 
+   int *locArray, int depth); */
+LocationID *reachableLocations(Map map, int *numLocations, LocationID from, int drac, int railLength, int road, int sea);
 
 #endif
