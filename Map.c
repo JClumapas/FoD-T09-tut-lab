@@ -24,6 +24,7 @@ struct MapRep {
 };
 
 static void addConnections(Map);
+static void includeReachableByRail(Map map, int *reachable, LocationID from, int railLength);
 
 /* int adjacentLocations(Map g, int from, int prevLoc, int playerID, int round, int road, int rail, int sea, 
    int *locArray, int depth){
