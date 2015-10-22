@@ -302,7 +302,7 @@ void getHistory(GameView currentView, PlayerID player,
 
 // Returns an array of LocationIDs for all directly connected locations
 
-LocationID *connectedLocations(GameView currentView, int *numLocations,
+/*LocationID *connectedLocations(GameView currentView, int *numLocations,
                                LocationID from, PlayerID player, Round round,
                                int road, int rail, int sea)
 {
@@ -330,4 +330,26 @@ LocationID *connectedLocations(GameView currentView, int *numLocations,
     
     fprintf(stderr, "level 5\n");
     return conectedLocs; 
+}*/
+
+LocationID *connectedLocations(GameView currentView, int *numLocations,
+        LocationID from, PlayerID player, Round round,
+        int road, int rail, int sea) {
+
+    assert(validPlace(from));
+    assert(player >= PLAYER_LORD_GODALMING && player <= PLAYER_DRACULA);
+
+    Map europe = newMap();
+
+    int drac = (player == PLAYER_DRACULA);
+
+    int railLength = (player + round) % 4;
+    if (!rail) railLength = 0;
+    if (drac) railLength = 0;
+
+
+    LocationID  * res =  reachableLocations(europe, numLocations, from, drac, railLength, road, sea);
+
+    disposeMap(europe);
+    return res;
 }
